@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using Dapper.Oracle;
 using FluentAssertions;
 using Xunit;
@@ -20,7 +22,7 @@ namespace Tests.Dapper.Oracle
     {
         private readonly TestableOracleDynamicParameters testObject = new TestableOracleDynamicParameters();
 
-        public static IEnumerable<object[]> OracleCommands
+        public static IEnumerable<object[]> OracleDataFixture
         {
             get
             {
@@ -32,7 +34,19 @@ namespace Tests.Dapper.Oracle
             }
         }
 
-        [Theory, MemberData(nameof(OracleCommands))]
+        public static IEnumerable<object[]> OracleCommandFixture
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[] { new Managed.OracleCommand()  },
+                    new object[] { new UnManaged.OracleCommand()  }
+                };
+            }
+        }
+
+        [Theory, MemberData(nameof(OracleDataFixture))]
         public void SetOracleParameter(IDbCommand cmd, IOracleParameterRetretreiver retreiver)
         {
             testObject.Add("Foo", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.ReturnValue);
@@ -43,7 +57,7 @@ namespace Tests.Dapper.Oracle
             param.ParameterName.Should().Be("Foo");
         }
 
-        [Theory, MemberData(nameof(OracleCommands))]
+        [Theory, MemberData(nameof(OracleDataFixture))]
         public void SetOracleParameterCommand(IDbCommand cmd, IOracleParameterRetretreiver retreiver)
         {
             testObject.Add("Foo", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.ReturnValue);
@@ -52,10 +66,10 @@ namespace Tests.Dapper.Oracle
             cmd.Parameters.Should().HaveCount(1);
             var param = retreiver.GetParameter(cmd.Parameters[0]);
             param.ParameterName.Should().Be("Foo");
-            param.OracleDbType.Should().Be("RefCursor");            
+            param.OracleDbType.Should().Be("RefCursor");
         }
 
-        [Theory, MemberData(nameof(OracleCommands))]
+        [Theory, MemberData(nameof(OracleDataFixture))]
         public void SetOracleParameterCommandPlSqlAssociativeArray(IDbCommand cmd, IOracleParameterRetretreiver retreiver)
         {
             testObject.Add("Foo", collectionType: OracleMappingCollectionType.PLSQLAssociativeArray);
@@ -66,7 +80,7 @@ namespace Tests.Dapper.Oracle
             param.CollectionType.Should().Be("PLSQLAssociativeArray");
         }
 
-        [Theory, MemberData(nameof(OracleCommands))]
+        [Theory, MemberData(nameof(OracleDataFixture))]
         public void SetAllProperties(IDbCommand cmd, IOracleParameterRetretreiver retreiver)
         {
             testObject.Add("Foo", "Bar", OracleMappingType.Varchar2, ParameterDirection.Input, 42, true, 0, 0, "MySource", DataRowVersion.Original);
@@ -86,19 +100,19 @@ namespace Tests.Dapper.Oracle
             param.SourceVersion.Should().Be(DataRowVersion.Original);
         }
 
-        [Theory, MemberData(nameof(OracleCommands))]
-        public void SetBindByNameFalse(IDbCommand cmd, IOracleParameterRetretreiver retreiver)
+        [Theory, MemberData(nameof(OracleCommandFixture))]
+        public void SetBindByNameFalse(IDbCommand cmd)
         {
             testObject.BindByName = true;
-            testObject.Add("Foo","Bar");
+            testObject.Add("Foo", "Bar");
             testObject.AddParam(cmd);
 
-            var value = (bool) cmd.GetType().GetProperty("BindByName").GetValue(cmd);
+            var value = (bool)cmd.GetType().GetProperty("BindByName").GetValue(cmd);
             value.Should().BeTrue();
         }
 
-        [Theory, MemberData(nameof(OracleCommands))]
-        public void SetBindByNameNotSet(IDbCommand cmd, IOracleParameterRetretreiver retreiver)
+        [Theory, MemberData(nameof(OracleCommandFixture))]
+        public void SetBindByNameNotSet(IDbCommand cmd)
         {
             testObject.BindByName = false;
             testObject.Add("Foo", "Bar");
@@ -106,6 +120,15 @@ namespace Tests.Dapper.Oracle
 
             var value = (bool)cmd.GetType().GetProperty("BindByName").GetValue(cmd);
             value.Should().BeFalse();
+        }
+
+        [Fact]
+        public void WrongTypeConnectionWillThrowException()
+        {
+            var cmd = new SqlCommand();
+            testObject.Add("Foo", "Bar");
+            Action act = () => testObject.AddParam(cmd);
+            act.Should().Throw<NotSupportedException>();
         }
     }
 }
