@@ -24,11 +24,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 
-# Apikey stored in project
-apikey.txt
-
-# Assemblyinfo file, we don't want changes to these added to the commits.
-AssemblyInfo.cs
+paket.template
 
 # Visual Studio 2015 cache/options directory
 .vs/

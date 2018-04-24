@@ -32,7 +32,8 @@ task Test -depends Compile, Clean {
 task Compile -depends Clean,Init {
   Exec {            
     $version = Invoke-GitVersion
-    Update-AssemblyInfoFiles -version $version.AssemblySemVer -assemblyInformalVersion $version.InformationalVersion
+    $versionNumber = [string]::Format("{0}.0",$version.MajorMinorPatch)
+    Update-AssemblyInfoFiles -version $versionNumber -assemblyInformalVersion $version.InformationalVersion
     msbuild $slnFile /t:Rebuild /p:Configuration=$configuration /v:quiet         
   }
 }
@@ -43,7 +44,8 @@ task Clean {
 
 task Package -depends Test {
     Exec {
-        $version = Invoke-GitVersion         
+        $version = Invoke-GitVersion   
+        Write-PaketTemplateFiles      
         & $paketExe pack $buildArtifacts --verbose --version $version.MajorMinorPatch
     }
 }
@@ -63,6 +65,20 @@ task ? -Description "Helper to display task info" {
 function Invoke-Gitversion() {
     $gitVersionPath = Join-Path $PSScriptRoot "packages\GitVersion.CommandLine\tools\GitVersion.exe"
     & $gitVersionPath /output json | ConvertFrom-Json
+}
+
+function Write-PaketTemplateFiles()
+{
+    $relNotes = Get-Content (Join-Path $PSScriptRoot "releasenotes.md")
+    Get-ChildItem $PSScriptRoot -Recurse -Filter *.tmpl | % {
+        $paketFile = Get-Content $_.FullName
+        $paketFile += "`nreleaseNotes`n"
+        $relNotes | % {
+            $paketFile += "`t$_"
+        } 
+        $newFile = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName),"paket.template")
+        Set-Content -Value $paketFile -Path $newFile
+    }    
 }
 
 
@@ -87,19 +103,14 @@ function Update-AssemblyInfoFiles ([string] $version, [string]$assemblyInformalV
 
 	Get-ChildItem -r -Path $srcRoot -filter AssemblyInfo.cs | % {
 		$filename = $_.fullname
-		
-		
-			
-			
+									
 		# see http://stackoverflow.com/questions/3057673/powershell-locking-file
 		# I am getting really funky locking issues. 
 		# The code block below should be:
 		#     (get-content $filename) | % {$_ -replace $versionPattern, $version } | set-content $filename
 
 		$tmp = ($filename + ".tmp")
-		if (test-path ($tmp)) { remove-item $tmp }
-
-		
+		if (test-path ($tmp)) { remove-item $tmp }		
 		(get-content $filename) | 
                 % {$_ -replace $versionFilePattern, $versionAssemblyFile } | 
                 % {$_ -replace $versionPattern, $versionAssembly } |
@@ -110,3 +121,5 @@ function Update-AssemblyInfoFiles ([string] $version, [string]$assemblyInformalV
 		move-item $tmp $filename -force			
 	}
 }
+
+
