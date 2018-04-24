@@ -1,0 +1,11 @@
+source https://api.nuget.org/v3/index.json
+framework: net451
+nuget Dapper                     >= 1.50.2
+nuget Oracle.ManagedDataAccess   >= 12.2.1100
+nuget Oracle.DataAccess.x86      >= 2.112.1
+nuget FluentAssertions           >= 5.3.0
+nuget Moq                        ~> 4.8.2
+nuget xunit                      >= 2.3.1
+nuget xunit.runner.console       >= 2.3.1
+nuget xunit.runner.visualstudio  >= 2.3.1
+nuget GitVersion.CommandLine

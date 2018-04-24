@@ -1,0 +1,10 @@
+type project
+licenseUrl 	https://github.com/DIPSASA/Dapper.Oracle/blob/master/LICENSE
+authors DIPS AS
+description
+  Oracle support for Dapper Micro-orm.
+owners DIPS AS
+projectUrl https://github.com/DIPSASA/Dapper.Oracle 
+tags
+	 orm sql micro-orm oracle
+copyright 2018 DIPS AS

@@ -1,0 +1,9 @@
+Dapper
+Dapper                   
+Oracle.ManagedDataAccess 
+Oracle.DataAccess.x86    
+FluentAssertions         
+Moq                      
+xunit                    
+xunit.runner.console     
+xunit.runner.visualstudio

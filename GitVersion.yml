@@ -1,0 +1,12 @@
+next-version: 1.0.0
+commit-message-incrementing: Enabled
+assembly-versioning-scheme: Major
+continuous-delivery-fallback-tag: ''
+mode: ContinuousDeployment
+branches: 
+  master: 
+    tag: ''
+    increment: Patch
+  features?[/-]:
+    tag: 'CI'
+    increment: Patch
