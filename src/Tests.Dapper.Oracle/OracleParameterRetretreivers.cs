@@ -32,6 +32,8 @@ namespace Tests.Dapper.Oracle
 
         public string SourceColumn { get; set; }
 
+        public int[] ArrayBindSize { get; set; }
+
         public DataRowVersion SourceVersion { get; set; }
     }
 
@@ -52,7 +54,8 @@ namespace Tests.Dapper.Oracle
                 IsNullable = oraParam.IsNullable,
                 Precision = oraParam.Precision,
                 SourceColumn = oraParam.SourceColumn,
-                SourceVersion = oraParam.SourceVersion
+                SourceVersion = oraParam.SourceVersion,
+                ArrayBindSize = oraParam.ArrayBindSize
             };
         }        
     }
@@ -74,7 +77,8 @@ namespace Tests.Dapper.Oracle
                 IsNullable = oraParam.IsNullable,
                 Precision = oraParam.Precision,
                 SourceColumn = oraParam.SourceColumn,
-                SourceVersion = oraParam.SourceVersion
+                SourceVersion = oraParam.SourceVersion,
+                ArrayBindSize = oraParam.ArrayBindSize
             };
         }        
     }
