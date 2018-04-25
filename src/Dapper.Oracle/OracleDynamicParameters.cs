@@ -169,7 +169,7 @@ namespace Dapper.Oracle
         /// </summary>
         /// <param name="command">The raw command prior to execution</param>
         /// <param name="identity">Information about the query</param>
-        protected void AddParameters(IDbCommand command, SqlMapper.Identity identity)
+        protected virtual void AddParameters(IDbCommand command, SqlMapper.Identity identity)
         {
             if (ArrayBindCount > 0)
             {
