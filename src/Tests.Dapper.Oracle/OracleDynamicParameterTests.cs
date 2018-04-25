@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using Dapper;
 using Dapper.Oracle;
 using FluentAssertions;
 using Xunit;
@@ -10,6 +11,16 @@ using Managed = Oracle.ManagedDataAccess.Client;
 
 namespace Tests.Dapper.Oracle
 {
+    internal class OverrideCreateCommand : TestableOracleDynamicParameters
+    {
+        public bool wasCalled = false;
+        protected override void AddParameters(IDbCommand command, SqlMapper.Identity identity)
+        {
+            wasCalled = true;
+            base.AddParameters(command, identity);
+        }
+    }
+
     internal class TestableOracleDynamicParameters : OracleDynamicParameters
     {
         public void AddParam(IDbCommand command)
@@ -129,6 +140,31 @@ namespace Tests.Dapper.Oracle
             testObject.Add("Foo", "Bar");
             Action act = () => testObject.AddParam(cmd);
             act.Should().Throw<NotSupportedException>();
+        }
+
+        [Theory, MemberData(nameof(OracleDataFixture))]
+        public void DerivedClassSetAllProperties(IDbCommand cmd, IOracleParameterRetretreiver retreiver)
+        {
+            var derived = new OverrideCreateCommand();
+
+            derived.Add("Foo", "Bar", OracleMappingType.Varchar2, ParameterDirection.Input, 42, true, 0, 0, "MySource", DataRowVersion.Original);
+
+            derived.AddParam(cmd);
+            cmd.Parameters.Should().HaveCount(1);
+
+            derived.wasCalled.Should().BeTrue();
+
+            var param = retreiver.GetParameter(cmd.Parameters[0]);
+            param.ParameterName.Should().Be("Foo");
+            param.Value.Should().Be("Bar");
+            param.OracleDbType.Should().Be("Varchar2");
+            param.Direction.Should().Be(ParameterDirection.Input);
+            param.Size.Should().Be(42);
+            param.IsNullable.Should().Be(true);
+            param.Scale.Should().Be(0);
+            param.Precision.Should().Be(0);
+            param.SourceColumn.Should().Be("MySource");
+            param.SourceVersion.Should().Be(DataRowVersion.Original);
         }
     }
 }
