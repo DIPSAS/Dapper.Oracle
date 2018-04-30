@@ -5,13 +5,15 @@ Oracle support for Dapper Micro ORM.
 ### Introduction
 
 Dapper is a great tool if you want to write database-agnostic code.
-However, sometimes you need to access functionality that is provider-specific.  This assembly adds support for writing Oracle-specific SQL, that supports all dbtypes used by the managed provider on a parameter, supports setting various properties on the command(LOBFetchSize, ArrayBindCount, BindByName), as well as setting CollectionType on the parameter.
+However, sometimes you need to access functionality that is provider-specific.  This assembly adds support for writing Oracle-specific SQL, that supports all dbtypes used by the Oracle managed provider on a parameter, supports setting various properties on the command(LOBFetchSize, ArrayBindCount, BindByName), as well as setting CollectionType on the parameter.
 Using this package, you can now run stored procedures that returns RefCursor, or use array bind count to execute a sql statements with a array of parameters.
 
 ### Supported Oracle-specific properties
 **OracleParameter(Managed and UnManaged)**
 - OracleDbType enum (all members used by the managed provider)
 - CollectionType enum
+- ParameterStatus (return type when executing stored procedure)
+- ArrayBindSize
 
 **OracleCommand (Managed and UnManaged)**
 - ArrayBindCount property
@@ -51,6 +53,11 @@ public void RunStoredProcedureWithArrayAsParameters(IEnumerable<long> idvalues)
     connection.Execute("Schema.Package.MyStoredProcedure", parameters, commandType: CommandType.StoredProcedure);
 }
 ```
+
+## Building
+From a powershell script, run build.ps1 from the root folder of the repo.
+Example
+build.ps1 -Task Compile
 
 
 

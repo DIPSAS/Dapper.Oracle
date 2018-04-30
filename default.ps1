@@ -81,6 +81,12 @@ function Write-PaketTemplateFiles()
     }    
 }
 
+function Write-Documentation
+{
+    Write-Host "Available tasks:Clean,Init,Compile,Test,Package"
+    Write-Host "Usage example: build.ps1 -Tasks Test,Package"
+}
+
 
 function Update-AssemblyInfoFiles ([string] $version, [string]$assemblyInformalVersion) {
 #-------------------------------------------------------------------------------

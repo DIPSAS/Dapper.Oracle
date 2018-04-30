@@ -44,4 +44,15 @@
         None,
         PLSQLAssociativeArray,
     }
+
+    /// <summary>
+    /// Mapping enum to map Parameter status for OracleParameter
+    /// </summary>
+    public enum OracleParameterMappingStatus
+    {
+        Success,
+        NullFetched,
+        NullInsert,
+        Truncation,
+    }
 }

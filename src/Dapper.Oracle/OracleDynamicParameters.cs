@@ -11,11 +11,11 @@ namespace Dapper.Oracle
     /// Parameter support for Oracle-specific types and functions.  For use with Dapper.
     /// Implements <see cref="SqlMapper.IDynamicParameters"/>.
     /// </summary>
-    public class OracleDynamicParameters : SqlMapper.IDynamicParameters
+    public partial class OracleDynamicParameters : SqlMapper.IDynamicParameters
     {
         private static Dictionary<SqlMapper.Identity, Action<IDbCommand, object>> ParamReaderCache { get; } = new Dictionary<SqlMapper.Identity, Action<IDbCommand, object>>();
 
-        private Dictionary<string, ParamInfo> Parameters { get; } = new Dictionary<string, ParamInfo>();
+        private Dictionary<string, OracleParameterInfo> Parameters { get; } = new Dictionary<string, OracleParameterInfo>();
 
         private List<object> templates;
 
@@ -119,11 +119,11 @@ namespace Dapper.Oracle
             string sourceColumn = null,
             DataRowVersion? sourceVersion = null,
             OracleMappingCollectionType? collectionType = null,
-            int[] arrayBindSize= null)
+            int[] arrayBindSize = null)
         {
-            Parameters[Clean(name)] = new ParamInfo()
+            Parameters[Clean(name)] = new OracleParameterInfo()
             {
-                Name = name,
+                Name = Clean(name),
                 Value = value,
                 ParameterDirection = direction ?? ParameterDirection.Input,
                 DbType = dbType,
@@ -159,6 +159,11 @@ namespace Dapper.Oracle
         {
             var val = Parameters[Clean(name)].AttachedParam.Value;
             return OracleValueConverter.Convert<T>(val);
+        }
+
+        public OracleParameterInfo GetParameter(string name)
+        {
+            return OracleMethodHelper.GetParameterInfo(Parameters[Clean(name)].AttachedParam);
         }
 
         void SqlMapper.IDynamicParameters.AddParameters(IDbCommand command, SqlMapper.Identity identity)
@@ -263,7 +268,10 @@ namespace Dapper.Oracle
             return name;
         }
 
-        internal class ParamInfo
+        /// <summary>
+        /// Class used to pass parameter information to and from the OracleCommand object
+        /// </summary>
+        public class OracleParameterInfo
         {
             public string Name { get; set; }
 
@@ -288,6 +296,8 @@ namespace Dapper.Oracle
             public OracleMappingCollectionType CollectionType { get; set; } = OracleMappingCollectionType.None;
 
             public int[] ArrayBindSize { get; set; } = null;
+
+            public OracleParameterMappingStatus Status { get; set; }
 
             public IDbDataParameter AttachedParam { get; set; }
         }
