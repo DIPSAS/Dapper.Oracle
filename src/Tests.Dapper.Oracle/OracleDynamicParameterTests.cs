@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using Dapper;
 using Dapper.Oracle;
 using FluentAssertions;
@@ -165,6 +166,21 @@ namespace Tests.Dapper.Oracle
             param.Precision.Should().Be(0);
             param.SourceColumn.Should().Be("MySource");
             param.SourceVersion.Should().Be(DataRowVersion.Original);
+        }
+
+        [Theory, MemberData(nameof(OracleDataFixture))]
+        public void ArrayBindSizeSet_ValueIsSet(IDbCommand cmd, IOracleParameterRetretreiver retreiver)
+        {
+            var bindSizeArray = Enumerable.Range(0, 20).ToArray();
+            testObject.Add("Foo", "Bar", arrayBindSize:bindSizeArray);
+
+            testObject.AddParam(cmd);
+
+            cmd.Parameters.Should().HaveCount(1);                    
+            var param = retreiver.GetParameter(cmd.Parameters[0]);
+            param.ParameterName.Should().Be("Foo");
+            param.Value.Should().Be("Bar");
+            param.ArrayBindSize.Should().BeSameAs(bindSizeArray);
         }
     }
 }

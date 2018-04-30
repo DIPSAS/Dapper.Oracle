@@ -118,7 +118,8 @@ namespace Dapper.Oracle
             byte? scale = null,
             string sourceColumn = null,
             DataRowVersion? sourceVersion = null,
-            OracleMappingCollectionType? collectionType = null)
+            OracleMappingCollectionType? collectionType = null,
+            int[] arrayBindSize= null)
         {
             Parameters[Clean(name)] = new ParamInfo()
             {
@@ -132,7 +133,8 @@ namespace Dapper.Oracle
                 Scale = scale,
                 SourceColumn = sourceColumn,
                 SourceVersion = sourceVersion ?? DataRowVersion.Current,
-                CollectionType = collectionType ?? OracleMappingCollectionType.None
+                CollectionType = collectionType ?? OracleMappingCollectionType.None,
+                ArrayBindSize = arrayBindSize
             };
         }
 
@@ -184,7 +186,7 @@ namespace Dapper.Oracle
             if (BindByName)
             {
                 OracleMethodHelper.SetBindByName(command, BindByName);
-            }        
+            }
 
             if (templates != null)
             {
@@ -284,6 +286,8 @@ namespace Dapper.Oracle
             public DataRowVersion SourceVersion { get; set; }
 
             public OracleMappingCollectionType CollectionType { get; set; } = OracleMappingCollectionType.None;
+
+            public int[] ArrayBindSize { get; set; } = null;
 
             public IDbDataParameter AttachedParam { get; set; }
         }

@@ -6,9 +6,9 @@ using System.Reflection;
 namespace Dapper.Oracle
 {
     internal class OracleMethodHelper
-    {        
-        private static readonly ConcurrentDictionary<Type, OracleProperties> CachedOracleTypes = new ConcurrentDictionary<Type, OracleProperties>();
-        private static readonly ConcurrentDictionary<Type, CommandProperties> CachedOracleCommandProperties = new ConcurrentDictionary<Type, CommandProperties>();        
+    {
+        private static readonly ConcurrentDictionary<Type, OracleParameterProperties> CachedOracleTypes = new ConcurrentDictionary<Type, OracleParameterProperties>();
+        private static readonly ConcurrentDictionary<Type, CommandProperties> CachedOracleCommandProperties = new ConcurrentDictionary<Type, CommandProperties>();
 
         public static void SetArrayBindCount(IDbCommand command, int arrayBindCount)
         {
@@ -22,7 +22,7 @@ namespace Dapper.Oracle
 
         public static void SetBindByName(IDbCommand command, bool bindByName)
         {
-            Get(command).BindByName.SetValue(command,bindByName);            
+            Get(command).BindByName.SetValue(command, bindByName);
         }
 
         public static void SetOracleParameters(IDbDataParameter parameter, OracleDynamicParameters.ParamInfo paramInfo)
@@ -66,12 +66,17 @@ namespace Dapper.Oracle
             {
                 method.CollectionType.SetValue(parameter, Enum.Parse(method.OracleCollectionEnumType, paramInfo.CollectionType.ToString()));
             }
+
+            if (paramInfo.ArrayBindSize != null)
+            {
+                method.ArrayBindSize.SetValue(parameter, paramInfo.ArrayBindSize);
+            }
         }
 
-        private static OracleProperties GetOracleProperties(Type type)
+        private static OracleParameterProperties GetOracleProperties(Type type)
         {
             Assembly assembly = type.Assembly;
-            var result = new OracleProperties()
+            var result = new OracleParameterProperties()
             {
                 OraDbType = type.GetProperty("OracleDbType"),
                 Size = type.GetProperty("Size"),
@@ -80,7 +85,8 @@ namespace Dapper.Oracle
                 Scale = type.GetProperty("Scale"),
                 SourceColumn = type.GetProperty("SourceColumn"),
                 SourceVersion = type.GetProperty("SourceVersion"),
-                CollectionType = type.GetProperty("CollectionType")
+                CollectionType = type.GetProperty("CollectionType"),
+                ArrayBindSize = type.GetProperty("ArrayBindSize")
             };
             switch (type.FullName)
             {
@@ -116,7 +122,7 @@ namespace Dapper.Oracle
         }
 
 
-        private class OracleProperties
+        private class OracleParameterProperties
         {
             public PropertyInfo OraDbType { get; set; }
 
@@ -127,6 +133,8 @@ namespace Dapper.Oracle
             public PropertyInfo Precision { get; set; }
 
             public PropertyInfo Scale { get; set; }
+
+            public PropertyInfo ArrayBindSize { get; set; }
 
             public PropertyInfo SourceColumn { get; set; }
 
