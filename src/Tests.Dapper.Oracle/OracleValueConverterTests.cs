@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Dapper.Oracle;
 using FluentAssertions;
 using Oracle.DataAccess.Types;
@@ -10,7 +11,7 @@ namespace Tests.Dapper.Oracle
     {
         [Fact]
         public void GetOracleStringWithContentReturnsContent()
-        {            
+        {
             var oraString = new OracleString("Foo");
             var result = OracleValueConverter.Convert<string>(oraString);
             result.Should().Be("Foo");
@@ -26,14 +27,14 @@ namespace Tests.Dapper.Oracle
 
         [Fact]
         public void GetStringAsDbNullReturnsNull()
-        {            
+        {
             var result = OracleValueConverter.Convert<string>(DBNull.Value);
             result.Should().BeNull();
         }
 
         [Fact]
         public void GetNullAsStringReturnsNull()
-        {            
+        {
             var result = OracleValueConverter.Convert<string>(null);
             result.Should().BeNull();
         }
@@ -57,8 +58,8 @@ namespace Tests.Dapper.Oracle
         {
             var result = OracleValueConverter.Convert<DateTime>(new OracleDate(DateTime.Today));
             result.Should().Be(DateTime.Today);
-        }
-
-
+        }                
     }
+
+    
 }

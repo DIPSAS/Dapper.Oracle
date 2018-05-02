@@ -25,7 +25,7 @@ namespace Dapper.Oracle
             Get(command).BindByName.SetValue(command, bindByName);
         }
 
-        public static void SetOracleParameters(IDbDataParameter parameter, OracleDynamicParameters.ParamInfo paramInfo)
+        public static void SetOracleParameters(IDbDataParameter parameter, OracleDynamicParameters.OracleParameterInfo oracleParameterInfo)
         {
             if (parameter == null)
             {
@@ -34,45 +34,73 @@ namespace Dapper.Oracle
 
             var method = CachedOracleTypes.GetOrAdd(parameter.GetType(), GetOracleProperties);
 
-            if (paramInfo.DbType != null)
+            if (oracleParameterInfo.DbType != null)
             {
-                object value = (int)paramInfo.DbType;
+                object value = (int)oracleParameterInfo.DbType;
                 method.OraDbType.SetValue(parameter, value);
             }
 
-            if (paramInfo.IsNullable.HasValue)
+            if (oracleParameterInfo.IsNullable.HasValue)
             {
-                method.IsNullable.SetValue(parameter, paramInfo.IsNullable.Value);
+                method.IsNullable.SetValue(parameter, oracleParameterInfo.IsNullable.Value);
             }
 
-            if (paramInfo.Scale.HasValue)
+            if (oracleParameterInfo.Scale.HasValue)
             {
-                method.Scale.SetValue(parameter, paramInfo.Scale.Value);
+                method.Scale.SetValue(parameter, oracleParameterInfo.Scale.Value);
             }
 
-            if (paramInfo.Precision.HasValue)
+            if (oracleParameterInfo.Precision.HasValue)
             {
-                method.Precision.SetValue(parameter, paramInfo.Precision.Value);
+                method.Precision.SetValue(parameter, oracleParameterInfo.Precision.Value);
             }
 
-            method.SourceVersion.SetValue(parameter, paramInfo.SourceVersion);
+            method.SourceVersion.SetValue(parameter, oracleParameterInfo.SourceVersion);
 
-            if (paramInfo.SourceColumn != null)
+            if (oracleParameterInfo.SourceColumn != null)
             {
-                method.SourceColumn.SetValue(parameter, paramInfo.SourceColumn);
+                method.SourceColumn.SetValue(parameter, oracleParameterInfo.SourceColumn);
             }
 
-            if (paramInfo.CollectionType != OracleMappingCollectionType.None)
+            if (oracleParameterInfo.CollectionType != OracleMappingCollectionType.None)
             {
-                method.CollectionType.SetValue(parameter, Enum.Parse(method.OracleCollectionEnumType, paramInfo.CollectionType.ToString()));
+                method.CollectionType.SetValue(parameter, Enum.Parse(method.OracleCollectionEnumType, oracleParameterInfo.CollectionType.ToString()));
             }
 
-            if (paramInfo.ArrayBindSize != null)
+            if (oracleParameterInfo.ArrayBindSize != null)
             {
-                method.ArrayBindSize.SetValue(parameter, paramInfo.ArrayBindSize);
+                method.ArrayBindSize.SetValue(parameter, oracleParameterInfo.ArrayBindSize);
             }
         }
 
+        internal static  OracleDynamicParameters.OracleParameterInfo GetParameterInfo(IDbDataParameter parameter)
+        {
+            var method = GetOracleProperties(parameter.GetType());
+            var paramInfo = new OracleDynamicParameters.OracleParameterInfo();
+            paramInfo.Name = parameter.ParameterName;
+            paramInfo.SourceVersion = parameter.SourceVersion;
+            paramInfo.Precision = parameter.Precision;
+            paramInfo.Size = parameter.Size;
+            
+            paramInfo.DbType = (OracleMappingType)Enum.Parse(
+                    typeof(OracleMappingType),
+                    Enum.GetName(method.OracleDbEnumType, method.OraDbType.GetValue(parameter)));
+            paramInfo.ArrayBindSize = (int[])method.ArrayBindSize.GetValue(parameter);
+            paramInfo.CollectionType= (OracleMappingCollectionType)Enum.Parse(
+                    typeof(OracleMappingCollectionType),
+                    Enum.GetName(method.OracleCollectionEnumType, method.CollectionType.GetValue(parameter)));            
+            paramInfo.ParameterDirection = parameter.Direction;
+            paramInfo.IsNullable = parameter.IsNullable;
+            paramInfo.Scale = parameter.Scale;
+            paramInfo.SourceColumn = parameter.SourceColumn;
+            paramInfo.Status = (OracleParameterMappingStatus)Enum.Parse(
+                    typeof(OracleParameterMappingStatus),
+                    Enum.GetName(method.OracleStatusEnumType,method.Status.GetValue(parameter)));
+            paramInfo.Value = parameter.Value;
+
+            return paramInfo;
+        }
+        
         private static OracleParameterProperties GetOracleProperties(Type type)
         {
             Assembly assembly = type.Assembly;
@@ -86,18 +114,21 @@ namespace Dapper.Oracle
                 SourceColumn = type.GetProperty("SourceColumn"),
                 SourceVersion = type.GetProperty("SourceVersion"),
                 CollectionType = type.GetProperty("CollectionType"),
-                ArrayBindSize = type.GetProperty("ArrayBindSize")
+                ArrayBindSize = type.GetProperty("ArrayBindSize"),
+                Status = type.GetProperty("Status")
             };
             switch (type.FullName)
             {
                 case "Oracle.DataAccess.Client.OracleParameter":
                     result.OracleDbEnumType = assembly.GetType("Oracle.DataAccess.Client.OracleDbType");
                     result.OracleCollectionEnumType = assembly.GetType("Oracle.DataAccess.Client.OracleCollectionType");
+                    result.OracleStatusEnumType = assembly.GetType("Oracle.DataAccess.Client.OracleParameterStatus");
                     break;
 
                 case "Oracle.ManagedDataAccess.Client.OracleParameter":
-                    result.OracleDbEnumType = assembly.GetType("Oracle.DataAccess.Client.OracleDbType");
+                    result.OracleDbEnumType = assembly.GetType("Oracle.ManagedDataAccess.Client.OracleDbType");
                     result.OracleCollectionEnumType = assembly.GetType("Oracle.ManagedDataAccess.Client.OracleCollectionType");
+                    result.OracleStatusEnumType = assembly.GetType("Oracle.ManagedDataAccess.Client.OracleParameterStatus");
                     break;
                 default:
                     throw new NotSupportedException(
@@ -142,9 +173,14 @@ namespace Dapper.Oracle
 
             public PropertyInfo CollectionType { get; set; }
 
+            public PropertyInfo Status { get; set; }
+
             public Type OracleDbEnumType { get; set; }
 
+            public Type OracleStatusEnumType { get; set; }
+
             public Type OracleCollectionEnumType { get; set; }
+            
         }
 
         private class CommandProperties
