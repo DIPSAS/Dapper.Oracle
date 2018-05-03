@@ -8,45 +8,51 @@ task default -depends Test
 
 $buildArtifacts = Join-Path $PSScriptRoot "buildartifacts"
 $slnFile = Join-Path $PSScriptRoot "src\Dapper.Oracle.sln"
-$testRunner = Join-Path $PSScriptRoot "packages\xunit.runner.console\tools\net452\xunit.console.x86.exe"
+$testRunner = Join-Path $PSScriptRoot "packages\tools\dotnet-xunit\tools\net452\xunit.console.x86.exe"
 $testFolder = Join-Path $PSScriptRoot "src\Tests.Dapper.Oracle\bin"
-$paketExe = Join-Path $PSScriptRoot ".paket\paket.exe"
+$propertiesFile = Join-Path $PSScriptRoot "src\Dapper.Oracle\obj\VersionInfo.g.props"
 
-task Init {
-    Exec { 
-        & $paketExe restore 
-        if(Test-Path -Path $buildArtifacts)
-        {
-            Remove-Item -Path $buildArtifacts -Force -Recurse
-        }
+task Init {                     
+    dotnet restore $slnFile
+    if(Test-Path -Path $buildArtifacts)
+    {
+        Remove-Item -Path $buildArtifacts -Force -Recurse
     }
 }
 
-task Test -depends Compile, Clean {
-  Exec {
-    $testAssemblies = [System.IO.Path]::Combine($testFolder,$configuration,"Tests.Dapper.Oracle.dll")    
-    & $testRunner $testAssemblies -verbose   
-  }
+task Test -depends Compile {
+    Exec {
+        pushd .\src\Tests.Dapper.Oracle
+    
+        dotnet xunit -framework net452 -c $configuration -nobuild -x86
+        dotnet xunit -framework netcoreapp2.0 -c $configuration -nobuild --fx-version 2.0.0
+    
+        popd  
+    }    
 }
 
-task Compile -depends Clean,Init {
+task Compile -depends Init {
   Exec {            
     $version = Invoke-GitVersion
     $versionNumber = [string]::Format("{0}.0",$version.MajorMinorPatch)
     Update-AssemblyInfoFiles -version $versionNumber -assemblyInformalVersion $version.InformationalVersion
-    msbuild $slnFile /t:Rebuild /p:Configuration=$configuration /v:quiet         
+    dotnet build $slnfile -c $configuration
   }
 }
 
 task Clean {
-  Exec { msbuild $slnFile /t:Clean /p:Configuration=$configuration /v:quiet }
+  Exec { 
+    dotnet clean $slnfile 
+    Get-ChildItem . -Include obj -Recurse | Remove-Item -Recurse -Force
+  }
 }
 
 task Package -depends Test {
-    Exec {
-        $version = Invoke-GitVersion   
-        Write-PaketTemplateFiles      
-        & $paketExe pack $buildArtifacts --verbose --version $version.MajorMinorPatch
+   Exec { 
+        $version = Invoke-GitVersion         
+        Write-PaketTemplateFiles                      
+        Write-VersionInfo($version)
+        dotnet pack $slnFile -c Release --no-build -o ..\..\buildartifacts         
     }
 }
 
@@ -63,7 +69,7 @@ task ? -Description "Helper to display task info" {
 }
 
 function Invoke-Gitversion() {
-    $gitVersionPath = Join-Path $PSScriptRoot "packages\GitVersion.CommandLine\tools\GitVersion.exe"
+    $gitVersionPath = Join-Path $PSScriptRoot "packages\tools\GitVersion.CommandLine\tools\GitVersion.exe"
     & $gitVersionPath /output json | ConvertFrom-Json
 }
 
@@ -79,6 +85,22 @@ function Write-PaketTemplateFiles()
         $newFile = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName),"paket.template")
         Set-Content -Value $paketFile -Path $newFile
     }    
+}
+
+function Write-VersionInfo($version)
+{
+    $xml = [Xml]@"
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<PropertyGroup>
+  <VersionPrefix>1.0.0</VersionPrefix>
+  <VersionSuffix></VersionSuffix>
+</PropertyGroup>
+</Project>
+"@
+    $xml.Project.PropertyGroup.VersionPrefix = $version.MajorMinorPatch
+    $xml.Project.PropertyGroup.VersionSuffix = $version.PreReleaseTag
+    $xml.Save($propertiesFile)
 }
 
 function Write-Documentation

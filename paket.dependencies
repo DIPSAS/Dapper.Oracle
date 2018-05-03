@@ -1,11 +1,32 @@
-source https://api.nuget.org/v3/index.json
-framework: net451
-nuget Dapper                     >= 1.50.2
-nuget Oracle.ManagedDataAccess   >= 12.2.1100
-nuget Oracle.DataAccess.x86      >= 2.112.1
-nuget FluentAssertions           >= 5.3.0
-nuget Moq                        ~> 4.8.2
-nuget xunit                      >= 2.3.1
-nuget xunit.runner.console       >= 2.3.1
-nuget xunit.runner.visualstudio  >= 2.3.1
-nuget GitVersion.CommandLine
+framework: net451, netstandard2.0    
+source https://www.nuget.org/api/v2
+clitool dotnet-xunit                      >= 2.3.1
+
+group Main
+    framework: net451, netstandard2.0    
+    source https://www.nuget.org/api/v2
+    nuget Dapper                     >= 1.50.2 
+    
+group Test    
+  source https://www.nuget.org/api/v2
+  framework: net452,netcoreapp2.0
+  nuget FluentAssertions           >= 5.3.0
+  nuget xunit                      >= 2.3.1  
+  nuget xunit.runner.visualstudio  >= 2.3.1    
+               
+group Test-netframework
+  source https://www.nuget.org/api/v2
+  framework: net452  
+  nuget Oracle.ManagedDataAccess   >= 12.2.1100
+  nuget Oracle.DataAccess.x86      >= 2.112.1 
+           
+group Test-netcore
+  source https://www.nuget.org/api/v2
+  framework: netcoreapp2.0  
+  nuget Oracle.ManagedDataAccess.Core 2.12.0-beta2      
+
+group tools
+  framework: net451  
+  source https://www.nuget.org/api/v2
+  nuget GitVersion.CommandLine
+  

@@ -7,12 +7,15 @@ using Dapper;
 using Dapper.Oracle;
 using FluentAssertions;
 using Xunit;
+#if NETCOREAPP2_0
+using Managed = Oracle.ManagedDataAccess.Client;
+#else
 using UnManaged = Oracle.DataAccess.Client;
 using Managed = Oracle.ManagedDataAccess.Client;
+#endif
 
 namespace Tests.Dapper.Oracle
-{    
-
+{
     internal class TestableOracleDynamicParameters : OracleDynamicParameters
     {
         public void AddParam(IDbCommand command)
@@ -29,11 +32,12 @@ namespace Tests.Dapper.Oracle
         {
             get
             {
-                return new[]
-                {
-                    new object[] { new Managed.OracleCommand(), new OracleManagedParameterRetretreiver()  },
-                    new object[] { new UnManaged.OracleCommand(), new OracleUnmanagedParameterRetretreiver()  }
-                };
+#if NETCOREAPP2_0
+                yield return new object[] {new Managed.OracleCommand(), new OracleManagedParameterRetretreiver()};
+#else
+                yield return new object[] { new Managed.OracleCommand(), new OracleManagedParameterRetretreiver() };
+                yield return new object[] { new UnManaged.OracleCommand(), new OracleUnmanagedParameterRetretreiver()};
+#endif                                                
             }
         }
 
@@ -41,11 +45,12 @@ namespace Tests.Dapper.Oracle
         {
             get
             {
-                return new[]
-                {
-                    new object[] { new Managed.OracleCommand()  },
-                    new object[] { new UnManaged.OracleCommand()  }
-                };
+#if NETCOREAPP2_0
+                yield return new object[] {new Managed.OracleCommand()};                
+#else
+                yield return new object[] { new Managed.OracleCommand() };
+                yield return new object[] { new UnManaged.OracleCommand() };
+#endif
             }
         }
 
