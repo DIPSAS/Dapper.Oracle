@@ -2,6 +2,8 @@
 
 Oracle support for Dapper Micro ORM.
 
+[![NuGet](https://img.shields.io/nuget/v/Dapper.Oracle.svg)](https://www.nuget.org/packages/Dapper.Oracle/)
+
 ### Introduction
 
 Dapper is a great tool if you want to write database-agnostic code.
