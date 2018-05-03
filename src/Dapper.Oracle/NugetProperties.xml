@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<PropertyGroup>
+  <Title>Dapper support for Oracle providers</Title>
+  <Authors>epaulsen</Authors>
+  <Copyright>Copyright 2018 DIPS AS</Copyright>
+  <PackageTags>Dapper;ORM;MicroORM;Oracle</PackageTags>  
+  <Description>Dapper is a great tool if you want to write database-agnostic code. 
+  However, sometimes you need to access functionality that is provider-specific. 
+  This assembly adds support for writing Oracle-specific SQL, that supports all dbtypes used by the Oracle managed provider on a parameter, 
+  supports setting various properties on the command(LOBFetchSize, ArrayBindCount, BindByName), as well as setting CollectionType on the parameter. 
+  
+  Using this package, you can now run stored procedures that returns RefCursor, or use array bind count to execute a sql statements with a array of parameters.</Description>
+  <PackageLicenseUrl>https://github.com/DIPSASA/Dapper.Oracle/blob/master/LICENSE</PackageLicenseUrl>
+  <PackageReleaseNotes></PackageReleaseNotes>
+  <PackageProjectUrl>https://github.com/DIPSASA/Dapper.Oracle/</PackageProjectUrl>
+  <VersionPrefix>1.0.0</VersionPrefix>
+  <VersionSuffix></VersionSuffix>
+</PropertyGroup>
+</Project>

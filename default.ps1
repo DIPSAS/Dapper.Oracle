@@ -43,7 +43,7 @@ task Compile -depends Init {
 task Clean {
   Exec { 
     dotnet clean $slnfile 
-    Get-ChildItem . -Include obj -Recurse | Remove-Item -Recurse -Force
+    Get-ChildItem .\src\Dapper.Oracle -Include obj -Recurse | Remove-Item -Recurse -Force
   }
 }
 
@@ -89,15 +89,11 @@ function Write-PaketTemplateFiles()
 
 function Write-VersionInfo($version)
 {
-    $xml = [Xml]@"
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-<PropertyGroup>
-  <VersionPrefix>1.0.0</VersionPrefix>
-  <VersionSuffix></VersionSuffix>
-</PropertyGroup>
-</Project>
-"@
+    [Xml]$xml = Get-Content .\src\Dapper.Oracle\NugetProperties.xml    
+    [string]$releaseNotes = (Get-Content C:\github\Dapper.Oracle\releasenotes.md) -join "`n"
+
+    $xml.Project.PropertyGroup.Copyright = [string]::Format("Copyright {0:yyyy} DIPS AS",[DateTime]::Now)    
+    $xml.Project.PropertyGroup.PackageReleaseNotes  = $releaseNotes
     $xml.Project.PropertyGroup.VersionPrefix = $version.MajorMinorPatch
     $xml.Project.PropertyGroup.VersionSuffix = $version.PreReleaseTag
     $xml.Save($propertiesFile)
