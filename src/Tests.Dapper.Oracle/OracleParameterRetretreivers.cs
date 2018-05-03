@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Data;
+#if NETCOREAPP2_0
+using Managed = Oracle.ManagedDataAccess.Client;
+#else
 using UnManaged = Oracle.DataAccess.Client;
 using Managed = Oracle.ManagedDataAccess.Client;
+#endif
 
 namespace Tests.Dapper.Oracle
 {
@@ -36,10 +40,11 @@ namespace Tests.Dapper.Oracle
 
         public DataRowVersion SourceVersion { get; set; }
     }
+#if NETCOREAPP2_0
 
+#else
     public class OracleUnmanagedParameterRetretreiver : IOracleParameterRetretreiver
     {
-
         public OracleParameterData GetParameter(object parameter)
         {
             var oraParam = (UnManaged.OracleParameter)parameter;
@@ -59,7 +64,7 @@ namespace Tests.Dapper.Oracle
             };
         }        
     }
-
+#endif
     public class OracleManagedParameterRetretreiver : IOracleParameterRetretreiver
     {        
 
@@ -69,8 +74,8 @@ namespace Tests.Dapper.Oracle
             return new OracleParameterData()
             {
                 ParameterName = oraParam.ParameterName,
-                OracleDbType = Enum.GetName(typeof(UnManaged.OracleDbType), oraParam.OracleDbType),
-                CollectionType = Enum.GetName(typeof(UnManaged.OracleCollectionType), oraParam.CollectionType),
+                OracleDbType = Enum.GetName(typeof(Managed.OracleDbType), oraParam.OracleDbType),
+                CollectionType = Enum.GetName(typeof(Managed.OracleCollectionType), oraParam.CollectionType),
                 Value = oraParam.Value,
                 Direction = oraParam.Direction,
                 Size = oraParam.Size,

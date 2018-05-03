@@ -1,9 +1,18 @@
-Dapper
-Dapper                   
-Oracle.ManagedDataAccess 
-Oracle.DataAccess.x86    
-FluentAssertions         
-Moq                      
-xunit                    
-xunit.runner.console     
-xunit.runner.visualstudio
+dotnet-xunit
+group Main
+	Dapper  
+	
+group Test
+    FluentAssertions 
+	xunit                      	
+	xunit.runner.visualstudio  
+
+group Test-netframework
+	Oracle.ManagedDataAccess 
+	Oracle.DataAccess.x86    
+
+group Test-netcore
+	Oracle.ManagedDataAccess.Core
+	    
+	
+		

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dapper.Oracle", "Dapper.Oracle\Dapper.Oracle.csproj", "{B468DF2C-A9FA-47A3-B5B4-82217A8A6E0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper.Oracle", "Dapper.Oracle\Dapper.Oracle.csproj", "{D8D11AD7-B1E7-4B47-A412-06FC2075AED6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Dapper.Oracle", "Tests.Dapper.Oracle\Tests.Dapper.Oracle.csproj", "{61B9A97E-39E8-4719-BF12-95448FC19122}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Dapper.Oracle", "Tests.Dapper.Oracle\Tests.Dapper.Oracle.csproj", "{8D6B3251-852F-45AB-A334-C0F3C1778D1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B468DF2C-A9FA-47A3-B5B4-82217A8A6E0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B468DF2C-A9FA-47A3-B5B4-82217A8A6E0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B468DF2C-A9FA-47A3-B5B4-82217A8A6E0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B468DF2C-A9FA-47A3-B5B4-82217A8A6E0B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{61B9A97E-39E8-4719-BF12-95448FC19122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{61B9A97E-39E8-4719-BF12-95448FC19122}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{61B9A97E-39E8-4719-BF12-95448FC19122}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{61B9A97E-39E8-4719-BF12-95448FC19122}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8D11AD7-B1E7-4B47-A412-06FC2075AED6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8D11AD7-B1E7-4B47-A412-06FC2075AED6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8D11AD7-B1E7-4B47-A412-06FC2075AED6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8D11AD7-B1E7-4B47-A412-06FC2075AED6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D6B3251-852F-45AB-A334-C0F3C1778D1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D6B3251-852F-45AB-A334-C0F3C1778D1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D6B3251-852F-45AB-A334-C0F3C1778D1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D6B3251-852F-45AB-A334-C0F3C1778D1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
