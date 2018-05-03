@@ -2,7 +2,8 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 <PropertyGroup>
   <Title>Dapper support for Oracle providers</Title>
-  <Authors>epaulsen</Authors>
+  <Authors>DIPSAS;epaulsen</Authors>
+  <PackageIconUrl>https://raw.githubusercontent.com/DIPSAS/Dapper.Oracle/master/doc/images/DIPS.png</PackageIconUrl>
   <Copyright>Copyright 2018 DIPS AS</Copyright>
   <PackageTags>Dapper;ORM;MicroORM;Oracle</PackageTags>  
   <Description>Dapper is a great tool if you want to write database-agnostic code. 
