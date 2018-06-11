@@ -118,7 +118,7 @@ namespace DotNetHelpers
         {
             XDocument doc = XDocument.Parse(xml);
             doc.Descendants(ns + "VersionPrefix").Single().Value = version;
-            doc.Descendants(ns + "VersionSuffix").Single().Value = versionSuffix;
+            doc.Descendants(ns + "VersionSuffix").Single().Value = versionSuffix.StartsWith(".") ? string.Empty : versionSuffix;
             doc.Descendants(ns + "FileVersion").Single().Value = version;
             doc.Descendants(ns + "AssemblyVersion").Single().Value = version.Substring(0, version.IndexOf(".")) + ".0.0.0";
             doc.Descendants(ns + "PackageReleaseNotes").Single().Value = releaseNotes;
