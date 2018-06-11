@@ -1,0 +1,111 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <NetCore Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), '^net(standard|coreapp)\d\.\d$'))">$(TargetFramework)</NetCore>
+        <NetFramework Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), '^net\d{2,3}$'))">$(TargetFramework)</NetFramework>
+        <IsNetCore>$(TargetFramework.Equals(`$(NetCore)`))</IsNetCore>
+        <IsNetFramework>$(TargetFramework.Equals(`$(NetFramework)`))</IsNetFramework>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(TargetFramework)' == '' ">
+        <IsNetCore>False</IsNetCore>
+        <IsNetFramework>False</IsNetFramework>
+    </PropertyGroup>
+
+    <!-- Define common properties -->
+    <PropertyGroup>
+        <FileAlignment>512</FileAlignment>
+        <TreatWarningsAsErrors Condition=" $(IsNetFramework)">true</TreatWarningsAsErrors>
+        <DisableImplicitFrameworkReferences Condition=" $(IsNetFramework) ">true</DisableImplicitFrameworkReferences>
+
+        <RootDir Condition=" '$(RootDir)' == '' ">$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\'))</RootDir>
+        <SolutionDir Condition=" '$(SolutionDir)' == '' ">$(MSBuildThisFileDirectory)</SolutionDir>
+        <!--<BaseOutputPath Condition=" '$(BaseOutputPath)' == '' ">$(SolutionDir)..\..\bin</BaseOutputPath>&ndash;&gt;-->
+
+        <OutputPath>$(RootDir)\bin\$(Configuration.ToLower())</OutputPath>
+        <!-- Could remove this but then it wouldn't be explicit -->
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
+
+        <Title>Dapper support for Oracle providers</Title>
+        <Authors>DIPSAS;epaulsen</Authors>
+        <PackageIconUrl>https://raw.githubusercontent.com/DIPSAS/Dapper.Oracle/master/doc/images/DIPS.png</PackageIconUrl>
+        <Copyright>Copyright 2018 DIPS AS</Copyright>
+        <PackageTags>Dapper;ORM;MicroORM;Oracle</PackageTags>  
+        <Description>Dapper is a great tool if you want to write database-agnostic code. 
+However, sometimes you need to access functionality that is provider-specific. 
+This assembly adds support for writing Oracle-specific SQL, that supports all dbtypes used by the Oracle managed provider on a parameter, 
+supports setting various properties on the command(LOBFetchSize, ArrayBindCount, BindByName), as well as setting CollectionType on the parameter. 
+  
+Using this package, you can now run stored procedures that returns RefCursor, or use array bind count to execute a sql statements with a array of parameters.</Description>
+  <PackageLicenseUrl>https://github.com/DIPSASA/Dapper.Oracle/blob/master/LICENSE</PackageLicenseUrl>  
+  <PackageProjectUrl>https://github.com/DIPSASA/Dapper.Oracle/</PackageProjectUrl>
+        <PackageOutputPath>$(RootDir)buildResult\nuget</PackageOutputPath>
+        <!--PackProjectInputFile>$(MSBuildProjectFullPath)</PackProjectInputFile>-->
+
+        <NuspecBasePath>$(MSBuildThisFileDirectory)</NuspecBasePath>
+
+        <UseSourceLink Condition=" '$(Configuration)' == 'Debug'">false</UseSourceLink>
+        <UseSourceLink Condition=" '$(Configuration)' == 'Release'">true</UseSourceLink>
+    </PropertyGroup>
+
+    <!-- Import targets file with version information -->
+    <Import Project="$(MSBuildThisFileDirectory)\common.generated.targets" Condition="Exists('$(MSBuildThisFileDirectory)\common.generated.targets')" />
+
+    <!-- Define common properties based on target framework -->
+    <PropertyGroup Condition=" $(IsNetCore) ">
+        <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <Optimize>false</Optimize>
+        <DebugType Condition=" $(IsNetFramework) ">full</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <Optimize>true</Optimize>
+        <DebugType Condition=" $(IsNetFramework) ">pdbonly</DebugType>
+    </PropertyGroup>
+
+    <!-- Hardcode framework version properties for well-known values (allows IDEs to know these constants) -->
+    <Choose>
+        <When Condition=" '$(TargetFramework)' == 'net461' ">
+            <PropertyGroup>
+                <DefineConstants>$(DefineConstants);NETFX_461;NETFX_46;NETFX_452;NETFX_451;NETFX_45;NETFX_40</DefineConstants>
+            </PropertyGroup>
+        </When>
+    </Choose>
+
+    <!-- Define framework version properties if compiling with framework not hardcoded above -->
+    <Target Name="SetFrameworkVersionProperties" BeforeTargets="Build" Condition=" $(IsNetFramework) And '$(DefineConstants.IndexOf(`NETFX_`))' == '-1' ">
+        <PropertyGroup>
+            <DefineConstants Condition="$([System.Version]::Parse('$(_TargetFrameworkVersionWithoutV)').CompareTo($([System.Version]::Parse('4.7'))))   &gt;= 0">$(DefineConstants);NETFX_47</DefineConstants>
+            <DefineConstants Condition="$([System.Version]::Parse('$(_TargetFrameworkVersionWithoutV)').CompareTo($([System.Version]::Parse('4.6.1')))) &gt;= 0">$(DefineConstants);NETFX_461</DefineConstants>
+            <DefineConstants Condition="$([System.Version]::Parse('$(_TargetFrameworkVersionWithoutV)').CompareTo($([System.Version]::Parse('4.6'))))   &gt;= 0">$(DefineConstants);NETFX_46</DefineConstants>
+            <DefineConstants Condition="$([System.Version]::Parse('$(_TargetFrameworkVersionWithoutV)').CompareTo($([System.Version]::Parse('4.5.2')))) &gt;= 0">$(DefineConstants);NETFX_452</DefineConstants>
+            <DefineConstants Condition="$([System.Version]::Parse('$(_TargetFrameworkVersionWithoutV)').CompareTo($([System.Version]::Parse('4.5.1')))) &gt;= 0">$(DefineConstants);NETFX_451</DefineConstants>
+            <DefineConstants Condition="$([System.Version]::Parse('$(_TargetFrameworkVersionWithoutV)').CompareTo($([System.Version]::Parse('4.5'))))   &gt;= 0">$(DefineConstants);NETFX_45</DefineConstants>
+            <DefineConstants Condition="$([System.Version]::Parse('$(_TargetFrameworkVersionWithoutV)').CompareTo($([System.Version]::Parse('4.0'))))   &gt;= 0">$(DefineConstants);NETFX_40</DefineConstants>
+        </PropertyGroup>
+    </Target>
+
+    <!-- add pdb to nuget package -->
+    <PropertyGroup>
+        <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludePDBsInPackage</TargetsForTfmSpecificContentInPackage>
+    </PropertyGroup>
+    <Target Name="IncludePDBsInPackage" Condition="'$(IncludeBuildOutput)' != 'false'">
+        <ItemGroup>
+            <TfmSpecificPackageFile Include="$(OutputPath)\$(AssemblyName).pdb" PackagePath="lib/$(TargetFramework)" />
+        </ItemGroup>
+    </Target>
+
+
+
+    <!--
+    <Target Name="DebugDisplay" BeforeTargets="BeforeBuild">
+        <Message Text="Target = $(TargetFramework) ($(TargetFrameworkVersion)) -> IsNetFramework = $(IsNetFramework), IsNetCore = $(IsNetCore)%0A     Defines = $(DefineConstants)" Importance="high" />
+    </Target>
+    -->
+
+</Project>

@@ -1,4 +1,8 @@
 # Releasenotes
+### 1.0.0
+- Speedup: Using compiled Expressions instead of reflection for setting Oracle-specific properties
+- Package icon and author changed to DIPS AS
+- Using built-in packagereferences instead of paket(less hassle for such a small project)
 
 ### 0.9.9
 - No changes except build system, moving to dotnet pack broke nuget package metadata

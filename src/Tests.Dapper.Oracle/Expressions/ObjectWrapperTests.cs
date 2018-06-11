@@ -6,7 +6,7 @@ using FluentAssertions;
 using Xunit;
 
 using Managed = Oracle.ManagedDataAccess.Client;
-#if NET452
+#if NETFRAMEWORK
 using UnManaged = Oracle.DataAccess.Client;
 #endif
 
