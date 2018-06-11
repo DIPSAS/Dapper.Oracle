@@ -40,9 +40,7 @@ namespace Tests.Dapper.Oracle
 
         public DataRowVersion SourceVersion { get; set; }
     }
-#if NETCOREAPP2_0
-
-#else
+#if NET452
     public class OracleUnmanagedParameterRetretreiver : IOracleParameterRetretreiver
     {
         public OracleParameterData GetParameter(object parameter)

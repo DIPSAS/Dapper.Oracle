@@ -1,74 +1,4 @@
-Framework 4.5.1
-properties {  
-  $configuration = 'Release'  
-}
-
-
-task default -depends Test
-
-$buildArtifacts = Join-Path $PSScriptRoot "buildartifacts"
-$slnFile = Join-Path $PSScriptRoot "src\Dapper.Oracle.sln"
-$testProject = Join-Path $PSScriptRoot "src\Tests.Dapper.Oracle\Tests.Dapper.Oracle.csproj"
-
-$testFolder = Join-Path $PSScriptRoot "src\Tests.Dapper.Oracle\bin"
-
-
-task Init {                     
-    dotnet restore $slnFile
-    if(Test-Path -Path $buildArtifacts)
-    {
-        Remove-Item -Path $buildArtifacts -Force -Recurse
-    }
-}
-
-task Test -depends Compile {
-    Exec {        
-        dotnet test $testProject                    
-    }    
-}
-
-task Compile -depends Init {
-  Exec {            
-    $version = Invoke-GitVersion    
-    Write-TargetsFile($version)
-    dotnet build $slnfile -c $configuration
-  }
-}
-
-task Clean {
-  Exec { 
-    dotnet clean $slnfile 
-    Get-ChildItem .\src\Dapper.Oracle -Include obj -Recurse | Remove-Item -Recurse -Force
-  }
-}
-
-task Package -depends Test {
-   Exec {                      
-        dotnet pack $slnFile -c Release --no-build -o ..\..\buildartifacts         
-    }
-}
-
-task Publish -depends Package {
-    Exec {       
-        Get-ChildItem -Path $buildArtifacts -Filter *.nupkg | % {
-            & $paketExe push $_.FullName --url https://api.nuget.org/v3/index.json
-        }
-    }
-}
-
-task ? -Description "Helper to display task info" {
-  Write-Documentation
-}
-
-
-function Write-Documentation
-{
-    Write-Host "Available tasks:Clean,Init,Compile,Test,Package"
-    Write-Host "Usage example: build.ps1 -Tasks Test,Package"
-}
-
-
-function Invoke-Gitversion() 
+﻿function Invoke-Gitversion() 
 {
         
     if(!(Test-Path -Path ".\packages\GitVersion.CommandLine\tools\GitVersion.exe"))
@@ -145,7 +75,7 @@ namespace DotNetHelpers
                 }
                 else
                 {
-                    if (line != "# Releasenotes")
+                    if (!string.IsNullOrEmpty(line))
                     {
                         yield return line;
                     }                    
@@ -166,6 +96,6 @@ namespace DotNetHelpers
     $version
     [DotNetHelpers.XmlWriter]::WriteVersionInfo($path, $version.MajorMinorPatch, $version.PreReleaseTag, $releaseNotes)
 }
+$ver = Invoke-GitVersion
 
-
-
+Write-TargetsFile -version $ver
