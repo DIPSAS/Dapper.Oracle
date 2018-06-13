@@ -14,14 +14,16 @@
     <PackageReference Include="xunit.runner.console" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>
- 
+
 
   <!--Oracle.ManagedDataAccess.Core-->
 
 
   <PropertyGroup Condition=" $(IsNetFramework) ">
-    <DefineConstants>$(DefineConstants);NETFRAMEWORK</DefineConstants>    
+    <DefineConstants>$(DefineConstants);NETFRAMEWORK</DefineConstants>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
   </PropertyGroup>
+
 
   <ItemGroup>
     <ProjectReference Include="..\Dapper.Oracle\Dapper.Oracle.csproj" />
