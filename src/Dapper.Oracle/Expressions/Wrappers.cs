@@ -22,8 +22,6 @@ namespace Dapper.Oracle.Expressions
 
         protected override Func<TObject, TEnumType> CreateGetter()
         {
-            Type enumType = _objectType.Assembly.GetType($"{_objectType.Namespace}.{_enumType}");
-
             var inputVariable = Expression.Parameter(typeof(TObject));
             var converted = Expression.Convert(inputVariable, _objectType);
             var retreiver = Expression.Property(converted, _propertyName);
@@ -52,7 +50,6 @@ namespace Dapper.Oracle.Expressions
             return Expression.Lambda<Action<TObject, TEnumType>>(expression, inputVariable, inputVariable2).Compile();
         }
     }
-
 
     public class ObjectWrapper<TObject, TValue>
     {
@@ -92,8 +89,18 @@ namespace Dapper.Oracle.Expressions
         protected virtual Func<TObject, TValue> CreateGetter()
         {
             var inputVariable = Expression.Parameter(typeof(TObject));
-            var retreiver = Expression.Property(inputVariable, typeof(TObject).GetProperty(_propertyName));
-            return Expression.Lambda<Func<TObject, TValue>>(retreiver, inputVariable).Compile();
+            if (typeof(TObject) != _objectType)
+            {
+                var converted = Expression.Convert(inputVariable, _objectType);
+                var retreiver = Expression.Property(converted, _objectType.GetProperty(_propertyName));
+                return Expression.Lambda<Func<TObject, TValue>>(retreiver, inputVariable).Compile();
+            }
+            else
+            {
+                var retreiver = Expression.Property(inputVariable, _objectType.GetProperty(_propertyName));
+                return Expression.Lambda<Func<TObject, TValue>>(retreiver, inputVariable).Compile();
+            }
+
         }
 
 
@@ -111,4 +118,7 @@ namespace Dapper.Oracle.Expressions
             return Expression.Lambda<Action<TObject, TValue>>(expression, inputVariable, inputVariable2).Compile();
         }
     }
+
 }
+
+
