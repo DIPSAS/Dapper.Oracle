@@ -153,5 +153,20 @@ namespace Tests.Dapper.Oracle
             param.Value.Should().Be("Bar");
             param.ArrayBindSize.Should().BeSameAs(bindSizeArray);
         }
+
+        [Theory, MemberData(nameof(OracleCommandFixture))]
+        public void GetParameter_DoesNotReturnNull(IDbCommand cmd)
+        {
+            var bindSizeArray = Enumerable.Range(0, 20).ToArray();
+            testObject.Add("Foo", "Bar", arrayBindSize: bindSizeArray);
+
+            testObject.AddParam(cmd);
+
+            cmd.Parameters.Should().HaveCount(1);
+            var param = testObject.GetParameter("Foo");
+            param.Name.Should().Be("Foo");
+            param.Value.Should().Be("Bar");
+            param.ArrayBindSize.Should().BeSameAs(bindSizeArray);
+        }
     }
 }
