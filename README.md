@@ -57,10 +57,10 @@ public void RunStoredProcedureWithArrayAsParameters(IEnumerable<long> idvalues)
 ```
 
 ## Building
-From a powershell script, run build.ps1 from the root folder of the repo.
-Example
+From a powershell script, run `build.ps1` from the root folder of the repo.
+
+Example:
+
+```powershell
 build.ps1 -Task Compile
-
-
-
-
+```
