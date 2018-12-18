@@ -43,6 +43,22 @@ namespace Dapper.Oracle
             // We need this, because, you know, Oracle.  OracleDecimal,OracleFloat,OracleYaddiAddy,OracleYourUncle etc value types.            
             if (Regex.IsMatch(valueType.FullName, @"Oracle\.\w+\.Types\.Oracle\w+"))
             {
+                // Fix Oracle 11g (to not throw the exception "Invalid operation on null data" if a function returns NULL)
+                var isNullProperty = valueType.GetProperty("IsNull");
+                if (isNullProperty != null && isNullProperty.CanRead)
+                {
+                    var isNull = (bool)isNullProperty.GetValue(val);
+                    if (isNull)
+                    {
+                        if (default(T) != null)
+                        {
+                            throw new ApplicationException("Attempting to cast a DBNull to a non nullable type!");
+                        }
+                        return default(T);
+                    }
+                    // If not isNull, continue and get the Value
+                }
+                
                 var valueProperty = valueType.GetProperty("Value");
                 if (valueProperty != null && valueProperty.CanRead)
                 {
