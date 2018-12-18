@@ -1,4 +1,13 @@
 # Releasenotes
+### 1.0.3
+- Fix Oracle 11g (to not throw the exception "Invalid operation on null data" if a function returns NULL)
+
+### 1.0.2
+- Linq compiled expression setter not working properly when attempting to set instance property on interface.  Fixed.
+
+### 1.0.1
+- Fix to .netstandard2 compliancy
+
 ### 1.0.0
 - Speedup: Using compiled Expressions instead of reflection for setting Oracle-specific properties
 - Package icon and author changed to DIPS AS
