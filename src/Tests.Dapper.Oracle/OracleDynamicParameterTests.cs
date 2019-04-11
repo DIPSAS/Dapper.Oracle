@@ -3,16 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using Dapper;
 using Dapper.Oracle;
 using FluentAssertions;
+using Oracle.ManagedDataAccess.Client;
 using Xunit;
-#if NETCOREAPP2_0
-using Managed = Oracle.ManagedDataAccess.Client;
-#else
-using UnManaged = Oracle.DataAccess.Client;
-using Managed = Oracle.ManagedDataAccess.Client;
-#endif
 
 namespace Tests.Dapper.Oracle
 {
@@ -32,12 +26,7 @@ namespace Tests.Dapper.Oracle
         {
             get
             {
-#if NETCOREAPP2_0
-                yield return new object[] {new Managed.OracleCommand(), new OracleManagedParameterRetretreiver()};
-#else
-                yield return new object[] { new Managed.OracleCommand(), new OracleManagedParameterRetretreiver() };
-                yield return new object[] { new UnManaged.OracleCommand(), new OracleUnmanagedParameterRetretreiver()};
-#endif                                                
+                yield return new object[] {new OracleCommand(), new OracleManagedParameterRetretreiver()};
             }
         }
 
@@ -45,12 +34,7 @@ namespace Tests.Dapper.Oracle
         {
             get
             {
-#if NETCOREAPP2_0
-                yield return new object[] {new Managed.OracleCommand()};                
-#else
-                yield return new object[] { new Managed.OracleCommand() };
-                yield return new object[] { new UnManaged.OracleCommand() };
-#endif
+                yield return new object[] {new OracleCommand()};                
             }
         }
 

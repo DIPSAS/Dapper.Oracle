@@ -40,30 +40,7 @@ namespace Tests.Dapper.Oracle
 
         public DataRowVersion SourceVersion { get; set; }
     }
-#if NETCOREAPP2_0
-#else
-    public class OracleUnmanagedParameterRetretreiver : IOracleParameterRetretreiver
-    {
-        public OracleParameterData GetParameter(object parameter)
-        {
-            var oraParam = (UnManaged.OracleParameter)parameter;
-            return new OracleParameterData()
-            {
-                ParameterName = oraParam.ParameterName,
-                OracleDbType = Enum.GetName(typeof(UnManaged.OracleDbType), oraParam.OracleDbType),
-                CollectionType = Enum.GetName(typeof(UnManaged.OracleCollectionType), oraParam.CollectionType),
-                Value = oraParam.Value,
-                Direction = oraParam.Direction,
-                Size = oraParam.Size,
-                IsNullable = oraParam.IsNullable,
-                Precision = oraParam.Precision,
-                SourceColumn = oraParam.SourceColumn,
-                SourceVersion = oraParam.SourceVersion,
-                ArrayBindSize = oraParam.ArrayBindSize
-            };
-        }        
-    }
-#endif
+    
     public class OracleManagedParameterRetretreiver : IOracleParameterRetretreiver
     {        
 

@@ -1,5 +1,5 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
+    <Import Project="$(MSBuildThisFileDirectory)\versioninfo.props" Condition="Exists('$(MSBuildThisFileDirectory)\versioninfo.props')" />
     <PropertyGroup>
         <NetCore Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), '^net(standard|coreapp)\d\.\d$'))">$(TargetFramework)</NetCore>
         <NetFramework Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), '^net\d{2,3}$'))">$(TargetFramework)</NetFramework>

@@ -1,12 +1,19 @@
 next-version: 1.0.0
-commit-message-incrementing: Enabled
 assembly-versioning-scheme: Major
-continuous-delivery-fallback-tag: ''
-mode: ContinuousDeployment
-branches: 
-  master: 
-    tag: ''
-    increment: Patch
-  features?[/-]:
-    tag: 'CI'
-    increment: Patch
+assembly-file-versioning-scheme: MajorMinorPatchTag
+commit-message-incrementing: Disabled
+mode: ContinuousDelivery
+continuous-delivery-fallback-tag: ci
+
+branches:
+  master:
+    tag: ci
+  feature:
+    regex: features?[/-]
+    tag: ci
+  pull-request:
+    mode: ContinuousDeployment
+    tag: PullRequest
+    increment: Inherit
+    track-merge-target: true
+    tag-number-pattern: '[/-](?<number>\d+)[-/]'

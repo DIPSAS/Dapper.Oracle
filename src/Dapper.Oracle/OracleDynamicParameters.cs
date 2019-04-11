@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Dapper.Oracle
 {
@@ -13,9 +14,11 @@ namespace Dapper.Oracle
     /// </summary>
     public partial class OracleDynamicParameters : SqlMapper.IDynamicParameters
     {
-        private static Dictionary<SqlMapper.Identity, Action<IDbCommand, object>> ParamReaderCache { get; } = new Dictionary<SqlMapper.Identity, Action<IDbCommand, object>>();
+        private static Dictionary<SqlMapper.Identity, Action<IDbCommand, object>> ParamReaderCache { get; } =
+            new Dictionary<SqlMapper.Identity, Action<IDbCommand, object>>();
 
-        private Dictionary<string, OracleParameterInfo> Parameters { get; } = new Dictionary<string, OracleParameterInfo>();
+        private Dictionary<string, OracleParameterInfo> Parameters { get; } =
+            new Dictionary<string, OracleParameterInfo>();
 
         private List<object> templates;
 
@@ -143,10 +146,7 @@ namespace Dapper.Oracle
         /// </summary>
         public IEnumerable<string> ParameterNames
         {
-            get
-            {
-                return Parameters.Select(p => p.Key);
-            }
+            get { return Parameters.Select(p => p.Key); }
         }
 
         /// <summary>
@@ -225,25 +225,35 @@ namespace Dapper.Oracle
                 }
                 else
                 {
-                    p = (IDbDataParameter)command.Parameters[name];
+                    p = (IDbDataParameter) command.Parameters[name];
                 }
 
                 OracleMethodHelper.SetOracleParameters(p, param);
-
-                var val = param.Value;
-                p.Value = val ?? DBNull.Value;
+                
                 p.Direction = param.ParameterDirection;
-                var s = val as string;
-                if (s?.Length <= 4000)
-                {
-                    p.Size = 4000;
-                }
+                
+                var val = param.Value;                
 
-                if (param.Size != null)
+                if (val != null && OracleTypeMapper.HasTypeHandler(val.GetType(), out var handler))
                 {
-                    p.Size = param.Size.Value;
+                    handler.SetValue(p,val);
                 }
+                else
+                {
+                    p.Value = val ?? DBNull.Value;
+                    
+                    var s = val as string;
+                    if (s?.Length <= 4000)
+                    {
+                        p.Size = 4000;
+                    }
 
+                    if (param.Size != null)
+                    {
+                        p.Size = param.Size.Value;
+                    }
+                }                
+                               
                 if (add)
                 {
                     command.Parameters.Add(p);
@@ -300,6 +310,6 @@ namespace Dapper.Oracle
             public OracleParameterMappingStatus Status { get; set; }
 
             public IDbDataParameter AttachedParam { get; set; }
-        }
+        }        
     }
 }
