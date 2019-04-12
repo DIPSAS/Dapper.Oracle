@@ -1,0 +1,8 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+configuration: Release
+platform: Any CPU
+build_script:
+- ps: Build.ps1 -Target pack
+artifacts:
+- path: ./artifacts/*.nupkg  

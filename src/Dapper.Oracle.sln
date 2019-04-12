@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper.Oracle", "Dapper.Ora
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Dapper.Oracle", "Tests.Dapper.Oracle\Tests.Dapper.Oracle.csproj", "{8D6B3251-852F-45AB-A334-C0F3C1778D1A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dapper.Oracle.StrongName", "Dapper.Oracle.StrongName\Dapper.Oracle.StrongName.csproj", "{0B6CCD06-2919-4D63-B5E6-404311DF6A64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8D6B3251-852F-45AB-A334-C0F3C1778D1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D6B3251-852F-45AB-A334-C0F3C1778D1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D6B3251-852F-45AB-A334-C0F3C1778D1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B6CCD06-2919-4D63-B5E6-404311DF6A64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B6CCD06-2919-4D63-B5E6-404311DF6A64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B6CCD06-2919-4D63-B5E6-404311DF6A64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B6CCD06-2919-4D63-B5E6-404311DF6A64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
