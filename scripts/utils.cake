@@ -1,5 +1,73 @@
 using System.Text.RegularExpressions;
 
+private void WriteImportOfVersionInfoToMsBuildFile()
+{
+    WriteToMsBuildXml("./src/directory.build.props", root => {
+        root.AddFirst(
+            new XElement("Import",
+                new XAttribute("Project", "$(MSBuildThisFileDirectory)versioninfo.props"),
+                new XAttribute("Condition", "exists('$(MSBuildThisFileDirectory)versioninfo.props')")));
+    });
+}
+
+private void WriteToMsBuildXml(FilePath file, Action<XElement> add)
+{
+    XElement root;    
+
+    if (!FileExists(file))
+    {
+        Information("File not found, creating new");
+        root = new XElement(ns + "Project");
+    }
+    else
+    {
+        Information("Using existing file");
+        root = XElement.Load(file.FullPath);
+    }
+
+    add(root);
+    root.Save(file.FullPath, SaveOptions.None);
+}
+
+
+private FilePath GetVersionInfoFile()
+{
+    return File("./src/versioninfo.props");
+}
+
+private void WriteVersionInformationToMsBuildFile(GitVersion version, FilePath changelogFile)
+{
+    var log = ChangeLog.Parse(changelogFile.FullPath);
+    var releaseNotes = log?.GetVersion(version.MajorMinorPatch)?.Body;
+
+    // Ignore if version is prerelease
+    if (string.IsNullOrEmpty(releaseNotes))
+    {
+        if (string.IsNullOrEmpty(version.PreReleaseTag))
+        {
+            throw new Exception($"Release notes for version {version.MajorMinorPatch} is missing");
+        }
+
+        Warning($"Missing release notes for version {version.MajorMinorPatch} but ignoring it because this is a prelease version");
+    }
+
+    var file = GetVersionInfoFile();
+
+    WriteToMsBuildXml(file, root => {
+        Information($"Writing version information [{version.NuGetVersionV2}] to {file}");
+
+        root.Descendants(ns+"PropertyGroup").Remove();
+        var pg = new XElement(ns + "PropertyGroup");
+        pg.Add(new XElement(ns + "Version", version.AssemblySemFileVer));
+        pg.Add(new XElement(ns + "FileVersion", version.AssemblySemFileVer));
+        pg.Add(new XElement(ns + "AssemblyVersion", version.AssemblySemVer));
+        pg.Add(new XElement(ns + "InformationalVersion", version.InformationalVersion));
+        pg.Add(new XElement(ns + "PackageReleaseNotes", releaseNotes));
+
+        root.Add(pg);                        
+    });
+}
+
 private class ChangeLog
 {
     // patterns

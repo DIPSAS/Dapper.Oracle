@@ -76,19 +76,20 @@ namespace Tests.Dapper.Oracle.IntegrationTests
 
         private static string GetBootstrapFolder()
         {
+            Func<string, bool> folderPredicate = (s) => File.Exists(Path.Combine(s, "scripts", "LocalOracleDockerDb.ps1"));
+            
             var folder = new DirectoryInfo(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            while (folder.Parent != null &&
-                   !File.Exists(Path.Combine(folder.FullName, "bootstrap", "LocalOracleDockerDb.ps1")))
+            while (folder.Parent != null && !folderPredicate(folder.FullName))
             {
                 folder = folder.Parent;
             }
 
-            if (!File.Exists(Path.Combine(folder.FullName, "bootstrap", "LocalOracleDockerDb.ps1")))
+            if (!folderPredicate(folder.FullName))
             {
-                throw new ApplicationException("Unable to find bootstrap folder, please verify repository contents");
+                throw new ApplicationException("Unable to find scripts folder, please verify repository contents");
             }
 
-            return Path.Combine(folder.FullName, "bootstrap");
+            return Path.Combine(folder.FullName, "scripts");
 
         }
     }       
