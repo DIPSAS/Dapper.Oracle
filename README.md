@@ -2,6 +2,7 @@
 
 Oracle support for Dapper Micro ORM.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/f0q9e5qetp84kj96?svg=true)](https://ci.appveyor.com/project/epaulsen/dapper-oracle)
 [![NuGet](https://img.shields.io/nuget/v/Dapper.Oracle.svg)](https://www.nuget.org/packages/Dapper.Oracle/)
 
 ### Introduction
