@@ -65,6 +65,20 @@ Task("test")
     });
 });
 
+// This task is used from appveyor builds, as appveyor build server free edition cannot run linux docker containers.
+Task("unit-test")
+    .IsDependentOn("build")
+    .Does(() =>
+{
+    DotNetCoreTest(solutionFile,  new DotNetCoreTestSettings 
+    {  
+        Configuration = configuration,
+        NoBuild = true,
+        NoRestore = true,
+        Filter = "Category!=Integration"
+    });
+});
+
 Task("signassemblies")
     .IsDependentOn("build")
     .Does(()=> 

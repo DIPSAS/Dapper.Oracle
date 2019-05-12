@@ -30,16 +30,16 @@
         <Title>Dapper support for Oracle providers</Title>
         <Authors>DIPSAS;epaulsen</Authors>
         <PackageIconUrl>https://raw.githubusercontent.com/DIPSAS/Dapper.Oracle/master/doc/images/DIPS.png</PackageIconUrl>
-        <Copyright>Copyright 2018 DIPS AS</Copyright>
+        <Copyright>Copyright 2019 DIPS AS</Copyright>
         <PackageTags>Dapper;ORM;MicroORM;Oracle</PackageTags>  
         <Description>Dapper is a great tool if you want to write database-agnostic code. 
 However, sometimes you need to access functionality that is provider-specific. 
 This assembly adds support for writing Oracle-specific SQL, that supports all dbtypes used by the Oracle managed provider on a parameter, 
 supports setting various properties on the command(LOBFetchSize, ArrayBindCount, BindByName), as well as setting CollectionType on the parameter. 
   
-Using this package, you can now run stored procedures that returns RefCursor, or use array bind count to execute a sql statements with a array of parameters.</Description>
-  <PackageLicenseUrl>https://github.com/DIPSASA/Dapper.Oracle/blob/master/LICENSE</PackageLicenseUrl>  
-  <PackageProjectUrl>https://github.com/DIPSASA/Dapper.Oracle/</PackageProjectUrl>
+Using this package, you can now run stored procedures that returns RefCursor, or use array bind count to execute a sql statements with a array of parameters.</Description>  
+        <PackageProjectUrl>https://github.com/DIPSASA/Dapper.Oracle/</PackageProjectUrl>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageOutputPath>$(RootDir)buildResult\nuget</PackageOutputPath>
         <!--PackProjectInputFile>$(MSBuildProjectFullPath)</PackProjectInputFile>-->
 
@@ -48,6 +48,9 @@ Using this package, you can now run stored procedures that returns RefCursor, or
         <UseSourceLink Condition=" '$(Configuration)' == 'Debug'">false</UseSourceLink>
         <UseSourceLink Condition=" '$(Configuration)' == 'Release'">true</UseSourceLink>
     </PropertyGroup>
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)..\LICENSE" Pack="true" PackagePath=""/>
+    </ItemGroup>
 
     <!-- Import targets file with version information -->
     <Import Project="$(MSBuildThisFileDirectory)\common.generated.targets" Condition="Exists('$(MSBuildThisFileDirectory)\common.generated.targets')" />

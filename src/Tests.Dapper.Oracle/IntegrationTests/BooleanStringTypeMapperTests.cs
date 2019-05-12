@@ -36,6 +36,7 @@ namespace Tests.Dapper.Oracle.IntegrationTests
         }
 
         [Fact]
+        [Trait("Category","Integration")]
         public void TestInsertMapping()
         {
             var count = InsertValue(1, true);
@@ -43,6 +44,7 @@ namespace Tests.Dapper.Oracle.IntegrationTests
         }
 
         [Fact]
+        [Trait("Category", "Integration")]
         public void TestSelectMappingFalse()
         {
             InsertValue(10, false);
@@ -52,6 +54,7 @@ namespace Tests.Dapper.Oracle.IntegrationTests
         }
         
         [Fact]
+        [Trait("Category", "Integration")]
         public void TestSelectMappingTrue()
         {
             InsertValue(11, true);
