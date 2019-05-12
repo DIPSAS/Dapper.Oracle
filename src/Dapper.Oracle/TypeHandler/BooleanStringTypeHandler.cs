@@ -15,8 +15,8 @@ namespace Dapper.Oracle.TypeHandler
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
-        /// <param name="trueValue">Mapping value to use in database for a boolean true value</param>
-        /// <param name="falseValue">Mapping value to use in database for a boolean false value</param>
+        /// <param name="trueValue">BulkMapping value to use in database for a boolean true value</param>
+        /// <param name="falseValue">BulkMapping value to use in database for a boolean false value</param>
         public BooleanStringTypeHandler(string trueValue, string falseValue,StringComparison comparison = StringComparison.Ordinal)
         {
             trueString = trueValue;

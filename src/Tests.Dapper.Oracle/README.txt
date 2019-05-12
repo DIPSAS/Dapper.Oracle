@@ -13,5 +13,6 @@ c) Add two environment variables to your computer:
     DA_OR_PWD - password for registered oracle-user at container-registry.oracle.com
 
     The build script needs those two set to be able to perform a docker login command to download the docker container.
+    The integration tests will execute the script /scripts/LocalOracleDockerDb.ps1, that script can also be invoked from a powershell prompt.
 
 

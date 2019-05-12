@@ -1,21 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\common.targets"/>
+    <Import Project="..\common.targets" />
     <PropertyGroup>
         <IsTestProject>false</IsTestProject>
         <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup Condition=" $(IsNetFramework) ">
-        <Reference Include="Microsoft.CSharp"/>
-        <Reference Include="System"/>
-        <Reference Include="System.Configuration"/>
-        <Reference Include="System.Core"/>
-        <Reference Include="System.Runtime.Serialization"/>
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="System" />
+        <Reference Include="System.Configuration" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Runtime.Serialization" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dapper" Version="1.50.2"/>
+        <PackageReference Include="Dapper" Version="1.50.2" />
     </ItemGroup>
     <PropertyGroup Condition=" $(IsNetFramework) ">
         <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
