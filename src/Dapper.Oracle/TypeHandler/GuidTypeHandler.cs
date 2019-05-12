@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Concurrent;
 using System.Data;
-using System.Linq.Expressions;
-using Dapper.Oracle.TypeHandler;
 
-namespace Dapper.Oracle.TypeMapping
+namespace Dapper.Oracle.TypeHandler
 {
     /// <summary>
     /// Conversion between <see cref="Guid"/> and RAW(16) Oracle data type 

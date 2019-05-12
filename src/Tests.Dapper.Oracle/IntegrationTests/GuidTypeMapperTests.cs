@@ -1,6 +1,7 @@
 using System;
 using Dapper;
 using Dapper.Oracle;
+using Dapper.Oracle.TypeHandler;
 using Dapper.Oracle.TypeMapping;
 using FluentAssertions;
 using Oracle.ManagedDataAccess.Client;
