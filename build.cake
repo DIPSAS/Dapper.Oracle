@@ -101,6 +101,23 @@ Task("signassemblies")
         }
     });
 
+// This task is only used from appveyor builds, as appveyor builds cannot sign binaries or nuget packages at the moment.
+Task("appveyor-pack")
+    .IsDependentOn("unit-test")    
+    .Does(()=> 
+{    
+    var settings = new DotNetCorePackSettings
+     {
+         Configuration = configuration,
+         OutputDirectory = "./artifacts/",
+         NoBuild = true,
+         NoRestore = true
+     };
+
+     DotNetCorePack(solutionFile, settings);
+});
+
+
 Task("pack")
     .IsDependentOn("test")
     .IsDependentOn("signassemblies")
