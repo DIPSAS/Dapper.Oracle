@@ -48,6 +48,7 @@ namespace Tests.Dapper.Oracle.IntegrationTests
 
 
         [Fact]
+        [Trait("Category", "Integration")]
         public void InsertGuidTestTest()
         {
             int rowCount = InsertCustomer(new Customer {CustomerId = Guid.NewGuid(), Name = "DIPS AS", City = "Narvik"});               
@@ -55,6 +56,7 @@ namespace Tests.Dapper.Oracle.IntegrationTests
         }
 
         [Fact]
+        [Trait("Category", "Integration")]
         public void SelectGuidTest()
         {
             var selectParam = new OracleDynamicParameters();
