@@ -37,7 +37,7 @@
     }
 
     /// <summary>
-    /// Mapping enum to map Collection type for parameter when using PL/Sql associative arrays without referencing oracle directly.
+    /// BulkMapping enum to map Collection type for parameter when using PL/Sql associative arrays without referencing oracle directly.
     /// </summary>
     public enum OracleMappingCollectionType
     {
@@ -46,7 +46,7 @@
     }
 
     /// <summary>
-    /// Mapping enum to map Parameter status for OracleParameter
+    /// BulkMapping enum to map Parameter status for OracleParameter
     /// </summary>
     public enum OracleParameterMappingStatus
     {

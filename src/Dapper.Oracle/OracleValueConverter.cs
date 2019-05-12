@@ -58,7 +58,7 @@ namespace Dapper.Oracle
                     }
                     // If not isNull, continue and get the Value
                 }
-                
+
                 var valueProperty = valueType.GetProperty("Value");
                 if (valueProperty != null && valueProperty.CanRead)
                 {
@@ -67,7 +67,7 @@ namespace Dapper.Oracle
                 }
             }
 
-            return (T)val;
+            return (T)System.Convert.ChangeType(val, typeof(T));
         }
     }
 }

@@ -1,5 +1,10 @@
 # Releasenotes
 
+## 1.2.1
+- Fixed bug in type converter
+- Added doc for Type handlers
+- New feature: Bulk Sql, se doc/BulkSql.md for details.
+
 ## 1.2.0
 - New buildsystem, now using Cakebuild instead of psake.
 - Cleanup of file tree.

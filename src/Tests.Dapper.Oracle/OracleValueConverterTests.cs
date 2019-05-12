@@ -63,7 +63,15 @@ namespace Tests.Dapper.Oracle
         {
             var result = OracleValueConverter.Convert<DateTime>(new OracleDate(DateTime.Today));
             result.Should().Be(DateTime.Today);
-        }                
+        }
+
+        [Fact]
+        public void GetOracleNumberReturnAsDecimal()
+        {
+            decimal expected = 100;
+            var result = OracleValueConverter.Convert<decimal>(100);
+            result.Should().Be(expected);
+        }
     }
 
     
