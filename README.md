@@ -50,7 +50,7 @@ public void RunStoredProcedureWithArrayAsParameters(IEnumerable<long> idvalues)
 {
     var parameters = new OracleDynamicParameters();
     var idArray = idvalues.ToArray();
-    parameters.ArrrayBindCount = idArray.Count;
+    parameters.ArrayBindCount = idArray.Count;
 
     parameters.Add("ArrayParameter", idArray, OracleMappingType.Int64, ParameterDirection.Input);
     connection.Execute("Schema.Package.MyStoredProcedure", parameters, commandType: CommandType.StoredProcedure);
