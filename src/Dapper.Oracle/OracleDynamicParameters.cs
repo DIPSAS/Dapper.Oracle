@@ -157,7 +157,18 @@ namespace Dapper.Oracle
         /// <returns>The value, note DBNull.Value is not returned, instead the value is returned as null</returns>
         public T Get<T>(string name)
         {
-            var val = Parameters[Clean(name)].AttachedParam.Value;
+            var paramInfo = Parameters[Clean(name)];
+            var attachedParam = paramInfo.AttachedParam;
+            object val = attachedParam == null ? paramInfo.Value : attachedParam.Value;
+            if (val == DBNull.Value)
+            {
+                if (default(T) != null)
+                {
+                    throw new ApplicationException("Attempting to cast a DBNull to a non nullable type! Note that out/return parameters will not have updated values until the data stream completes (after the 'foreach' for Query(..., buffered: false), or after the GridReader has been disposed for QueryMultiple)");
+                }
+                return default(T);
+            }
+            
             return OracleValueConverter.Convert<T>(val);
         }
 
