@@ -152,5 +152,13 @@ namespace Tests.Dapper.Oracle
             param.Value.Should().Be("Bar");
             param.ArrayBindSize.Should().BeSameAs(bindSizeArray);
         }
+
+        [Fact]
+        public void GetParameterValue()
+        {
+            testObject.Add("Foo", "Bar", OracleMappingType.Varchar2);
+
+            testObject.Get<string>("Foo").Should().Be("Bar");
+        }
     }
 }
