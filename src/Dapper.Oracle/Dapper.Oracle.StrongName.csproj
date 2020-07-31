@@ -3,7 +3,7 @@
   <Import Project="..\common.targets" />
   <PropertyGroup>
     <IsTestProject>false</IsTestProject>
-    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup Condition=" $(IsNetFramework) ">
@@ -15,9 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="1.50.2" />
+        <PackageReference Include="Dapper" Version="2.0.35" />
   </ItemGroup>
   <PropertyGroup Condition=" $(IsNetFramework) ">
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
   </PropertyGroup>
 </Project>
