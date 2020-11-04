@@ -157,7 +157,7 @@ namespace Dapper.Oracle
         /// <returns>The value, note DBNull.Value is not returned, instead the value is returned as null</returns>
         public T Get<T>(string name)
         {
-            var paramInfo = Parameters[Clean(name)];
+            var paramInfo = GetParameter(name);
             var attachedParam = paramInfo.AttachedParam;
             object val = attachedParam == null ? paramInfo.Value : attachedParam.Value;
             if (val == DBNull.Value)
@@ -174,7 +174,7 @@ namespace Dapper.Oracle
 
         public OracleParameterInfo GetParameter(string name)
         {
-            return OracleMethodHelper.GetParameterInfo(Parameters[Clean(name)].AttachedParam);
+            return Parameters[Clean(name)];
         }
 
         void SqlMapper.IDynamicParameters.AddParameters(IDbCommand command, SqlMapper.Identity identity)

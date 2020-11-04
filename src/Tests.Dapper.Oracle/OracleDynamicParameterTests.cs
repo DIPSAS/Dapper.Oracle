@@ -160,5 +160,18 @@ namespace Tests.Dapper.Oracle
 
             testObject.Get<string>("Foo").Should().Be("Bar");
         }
+
+        [Fact]
+        public void GetParameter()
+        {
+            testObject.Add("Foo", "Bar", OracleMappingType.Varchar2);
+
+            var param = testObject.GetParameter("Foo");
+
+            param.Should().NotBeNull();
+            param.Name.Should().Be("Foo");
+            param.Value.Should().Be("Bar");
+            param.DbType.Should().Be(OracleMappingType.Varchar2);
+        }
     }
 }
