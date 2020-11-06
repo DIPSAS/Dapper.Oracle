@@ -15,6 +15,43 @@ namespace Tests.Dapper.Oracle
     public class OracleValueConverterTests
     {
         [Fact]
+        public void GetStringArray()
+        {
+            var oraArray = new[] { "Foo", "Bar" };
+            var result = OracleValueConverter.Convert<string[]>(oraArray);
+            result.Should().BeOfType<string[]>();
+            result.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void GetOracleStringArray()
+        {
+            var oraArray = new OracleString[] { "Foo", "Bar" };
+            var result = OracleValueConverter.Convert<OracleString[]>(oraArray);
+            result.Should().BeOfType<OracleString[]>();
+            result.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void GetOracleString2StringArray()
+        {
+            var oraArray = new OracleString[] { "Foo", "Bar" };
+            var result = OracleValueConverter.Convert<string[]>(oraArray);
+            result.Should().BeOfType<string[]>();
+            result.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void GetIntArray()
+        {
+            var oraArray = new OracleDecimal[] { 1, 2 };
+            var result = OracleValueConverter.Convert<int[]>(oraArray);
+            result.Should().BeOfType<int[]>();
+            result.Should().HaveCount(2);
+        }
+
+
+        [Fact]
         public void GetOracleStringWithContentReturnsContent()
         {
             var oraString = new OracleString("Foo");
@@ -199,5 +236,5 @@ namespace Tests.Dapper.Oracle
             var result = OracleValueConverter.Convert<DateTime>(new OracleDate(DateTime.Today));
             result.Should().Be(DateTime.Today);
         }
-    }  
+    }
 }
