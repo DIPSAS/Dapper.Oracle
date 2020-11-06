@@ -2,6 +2,7 @@
 using System.Text;
 using Dapper.Oracle;
 using FluentAssertions;
+using Oracle.ManagedDataAccess.Client;
 #if NETCOREAPP2_0
 using Oracle.ManagedDataAccess.Types;
 #else
@@ -14,6 +15,78 @@ namespace Tests.Dapper.Oracle
 {
     public class OracleValueConverterTests
     {
+        [Fact]
+        public void GetOracleBoolean()
+        {
+            var oraBool = new OracleBoolean(true);
+            var result = OracleValueConverter.Convert<bool>(oraBool);
+            result.Should().Be(true);
+
+            oraBool = new OracleBoolean(-1);
+            result = OracleValueConverter.Convert<bool>(oraBool);
+            result.Should().Be(true);
+
+            oraBool = new OracleBoolean(1);
+            result = OracleValueConverter.Convert<bool>(oraBool);
+            result.Should().Be(true);
+
+            oraBool = new OracleBoolean(0);
+            result = OracleValueConverter.Convert<bool>(oraBool);
+            result.Should().Be(false);
+
+            var oraBoolArr = new OracleBoolean[2] { true, false };
+            var resultArr = OracleValueConverter.Convert<bool[]>(oraBoolArr);
+            resultArr.Should().BeOfType<bool[]>();
+            resultArr.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void GetOracleBinary()
+        {
+            var bytes = Encoding.UTF8.GetBytes("Lorem ipsum");
+            var oracleBytes = new OracleBinary(bytes);
+            var result = OracleValueConverter.Convert<byte[]>(oracleBytes);
+            result.Should().Equal(bytes);
+        }
+
+        [Fact]
+        public void GetOracleTimeStamp()
+        {
+            var dateNow = DateTime.Now;
+            var oraTimeStamp = new OracleTimeStamp(dateNow);
+            var result = OracleValueConverter.Convert<DateTime>(oraTimeStamp);
+            result.Should().Be(dateNow);
+
+            var oraTimeStampArr = new OracleTimeStamp[1] { dateNow };
+            var secondResult = OracleValueConverter.Convert<DateTime[]>(oraTimeStampArr);
+            secondResult.Should().BeOfType<DateTime[]>();
+            secondResult.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void GetOracleDateArray()
+        {
+            var oraDateArray = new OracleDate[] { 
+                (OracleDate)DateTime.Now,
+                (OracleDate)DateTime.Now.AddYears(1),
+                new OracleDate("10/29/2020 16:14:23")
+            };
+
+            var nullableOraDateArray = new OracleDate?[] {
+                (OracleDate)DateTime.Now,
+                (OracleDate)DateTime.Now.AddYears(1),
+                null,
+                new OracleDate("10/29/2020 16:14:23")
+            };
+            var result = OracleValueConverter.Convert<DateTime[]>(oraDateArray);
+            result.Should().BeOfType<DateTime[]>();
+            result.Should().HaveCount(3);
+
+            var secondResult = OracleValueConverter.Convert<DateTime?[]>(nullableOraDateArray);
+            secondResult.Should().BeOfType<DateTime?[]>();
+            secondResult.Should().HaveCount(4);
+        }
+
         [Fact]
         public void GetStringArray()
         {
