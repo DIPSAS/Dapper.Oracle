@@ -99,7 +99,7 @@ namespace Dapper.Oracle
                     var shortArray = new short[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
                     {
-                        shortArray[i] = short.Parse(arr.GetValue(i).ToString());
+                        shortArray[i] = short.Parse(arr.GetValue(i)?.ToString());
                     }
                     return (T)System.Convert.ChangeType(shortArray, nullableType ?? typeof(T));
 
@@ -107,7 +107,7 @@ namespace Dapper.Oracle
                     var intArray = new int[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
                     {
-                        intArray[i] = int.Parse(arr.GetValue(i).ToString());
+                        intArray[i] = int.Parse(arr.GetValue(i)?.ToString());
                     }
                     return (T)System.Convert.ChangeType(intArray, nullableType ?? typeof(T));
 
@@ -115,7 +115,7 @@ namespace Dapper.Oracle
                     var longArray = new long[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
                     {
-                        longArray[i] = long.Parse(arr.GetValue(i).ToString());
+                        longArray[i] = long.Parse(arr.GetValue(i)?.ToString());
                     }
                     return (T)System.Convert.ChangeType(longArray, nullableType ?? typeof(T));
 
@@ -124,21 +124,21 @@ namespace Dapper.Oracle
                     var decimalArray = new decimal[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
                     {
-                        decimalArray[i] = decimal.Parse(arr.GetValue(i).ToString());
+                        decimalArray[i] = decimal.Parse(arr.GetValue(i)?.ToString());
                     }
                     return (T)System.Convert.ChangeType(decimalArray, nullableType ?? typeof(T));
                 case "System.Boolean[]":
                     var boolArray = new bool[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
                     {
-                        boolArray[i] = bool.Parse(arr.GetValue(i).ToString());
+                        boolArray[i] = bool.Parse(arr.GetValue(i)?.ToString());
                     }
                     return (T)System.Convert.ChangeType(boolArray, nullableType ?? typeof(T));
                 default:
                     var strArray = new string[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
                     {
-                        strArray[i] = arr.GetValue(i).ToString();
+                        strArray[i] = arr.GetValue(i)?.ToString();
                     }
                     return (T)System.Convert.ChangeType(strArray, nullableType ?? typeof(T));
             }

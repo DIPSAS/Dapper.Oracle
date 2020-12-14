@@ -94,6 +94,11 @@ namespace Tests.Dapper.Oracle
             var result = OracleValueConverter.Convert<string[]>(oraArray);
             result.Should().BeOfType<string[]>();
             result.Should().HaveCount(2);
+
+            oraArray = new[] { "Foo", "Bar", null };
+            result = OracleValueConverter.Convert<string[]>(oraArray);
+            result.Should().BeOfType<string[]>();
+            result.Should().HaveCount(3);
         }
 
         [Fact]
