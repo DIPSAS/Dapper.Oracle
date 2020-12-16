@@ -77,13 +77,15 @@ namespace Dapper.Oracle
                 for (int i = 0; i < arr.Length; i++)
                 {
                     var oraDate = arr.GetValue(i);
-                    if (oraDate == null)
+                    dateArray[i] = null;
+
+                    if (oraDate != null)
                     {
-                        dateArray[i] = null;
-                    }
-                    else
-                    {
-                        dateArray[i] = (DateTime?)oraDate?.GetType()?.GetProperty("Value")?.GetValue(oraDate, null);
+                        var isOraDateValNull = (bool)oraDate?.GetType()?.GetProperty("IsNull")?.GetValue(oraDate, null);
+                        if(!isOraDateValNull)
+                        {
+                            dateArray[i] = (DateTime?)oraDate?.GetType()?.GetProperty("Value")?.GetValue(oraDate, null);
+                        }
                     }
                 }
                 return (T)System.Convert.ChangeType(dateArray, nullableType ?? typeof(T));

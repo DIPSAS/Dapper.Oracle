@@ -80,11 +80,11 @@ namespace Tests.Dapper.Oracle
             };
             var result = OracleValueConverter.Convert<DateTime[]>(oraDateArray);
             result.Should().BeOfType<DateTime[]>();
-            result.Should().HaveCount(3);
+            result.Should().HaveCount(oraDateArray.Length);
 
             var secondResult = OracleValueConverter.Convert<DateTime?[]>(nullableOraDateArray);
             secondResult.Should().BeOfType<DateTime?[]>();
-            secondResult.Should().HaveCount(4);
+            secondResult.Should().HaveCount(nullableOraDateArray.Length);
         }
 
         [Fact]
