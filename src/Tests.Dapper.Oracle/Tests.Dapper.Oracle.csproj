@@ -3,7 +3,7 @@
   <Import Project="..\common.targets" />
   <PropertyGroup>
     <IsTestProject>true</IsTestProject>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>

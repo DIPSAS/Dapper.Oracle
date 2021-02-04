@@ -2,12 +2,7 @@
 using System.Text;
 using Dapper.Oracle;
 using FluentAssertions;
-using Oracle.ManagedDataAccess.Client;
-#if NETCOREAPP2_0
 using Oracle.ManagedDataAccess.Types;
-#else
-using Oracle.DataAccess.Types;
-#endif
 
 using Xunit;
 
