@@ -58,16 +58,50 @@ namespace Dapper.Oracle
             var nullableType = Nullable.GetUnderlyingType(typeof(T));
             var arr = (Array)value;
 
+
+            if (typeof(T) == typeof(DateTime[]))
+            {
+                var dateArray = new DateTime[arr.Length];
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    var oraDate = arr.GetValue(i);
+                    var date = (DateTime)oraDate.GetType().GetProperty("Value").GetValue(oraDate, null);
+                    dateArray[i] = date;
+                }
+                return (T)System.Convert.ChangeType(dateArray, nullableType ?? typeof(T));
+            }
+
+            if (typeof(T) == typeof(DateTime?[]))
+            {
+                var dateArray = new DateTime?[arr.Length];
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    var oraDate = arr.GetValue(i);
+                    dateArray[i] = null;
+
+                    if (oraDate != null)
+                    {
+                        var isOraDateValNull = (bool)oraDate?.GetType()?.GetProperty("IsNull")?.GetValue(oraDate, null);
+                        if(!isOraDateValNull)
+                        {
+                            dateArray[i] = (DateTime?)oraDate?.GetType()?.GetProperty("Value")?.GetValue(oraDate, null);
+                        }
+                    }
+                }
+                return (T)System.Convert.ChangeType(dateArray, nullableType ?? typeof(T));
+            }
+
             switch (typeof(T).FullName)
             {
                 case "Oracle.ManagedDataAccess.Types.OracleString[]":
+                case "System.Byte[]":
                     return (T)System.Convert.ChangeType(value, nullableType ?? typeof(T));
 
                 case "System.Int16[]":
                     var shortArray = new short[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
                     {
-                        shortArray[i] = short.Parse(arr.GetValue(i).ToString());
+                        shortArray[i] = short.Parse(arr.GetValue(i)?.ToString());
                     }
                     return (T)System.Convert.ChangeType(shortArray, nullableType ?? typeof(T));
 
@@ -75,7 +109,7 @@ namespace Dapper.Oracle
                     var intArray = new int[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
                     {
-                        intArray[i] = int.Parse(arr.GetValue(i).ToString());
+                        intArray[i] = int.Parse(arr.GetValue(i)?.ToString());
                     }
                     return (T)System.Convert.ChangeType(intArray, nullableType ?? typeof(T));
 
@@ -83,7 +117,7 @@ namespace Dapper.Oracle
                     var longArray = new long[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
                     {
-                        longArray[i] = long.Parse(arr.GetValue(i).ToString());
+                        longArray[i] = long.Parse(arr.GetValue(i)?.ToString());
                     }
                     return (T)System.Convert.ChangeType(longArray, nullableType ?? typeof(T));
 
@@ -92,15 +126,21 @@ namespace Dapper.Oracle
                     var decimalArray = new decimal[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
                     {
-                        decimalArray[i] = decimal.Parse(arr.GetValue(i).ToString());
+                        decimalArray[i] = decimal.Parse(arr.GetValue(i)?.ToString());
                     }
                     return (T)System.Convert.ChangeType(decimalArray, nullableType ?? typeof(T));
-
+                case "System.Boolean[]":
+                    var boolArray = new bool[arr.Length];
+                    for (int i = 0; i < arr.Length; i++)
+                    {
+                        boolArray[i] = bool.Parse(arr.GetValue(i)?.ToString());
+                    }
+                    return (T)System.Convert.ChangeType(boolArray, nullableType ?? typeof(T));
                 default:
                     var strArray = new string[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
                     {
-                        strArray[i] = arr.GetValue(i).ToString();
+                        strArray[i] = arr.GetValue(i)?.ToString();
                     }
                     return (T)System.Convert.ChangeType(strArray, nullableType ?? typeof(T));
             }
