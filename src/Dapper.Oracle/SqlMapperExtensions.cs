@@ -22,6 +22,13 @@ namespace Dapper.Oracle
             SqlMapper.AddTypeHandler(typeof(T), handler);
         }
 
+        public static void AddTypeHandler<TType, THandler>() where THandler : SqlMapper.TypeHandler<TType>, new()
+        {
+            THandler handler = new THandler();
+            Handlers[typeof(TType)] = handler;
+            SqlMapper.AddTypeHandler(handler);
+        }
+
         public static bool HasTypeHandler(Type type, out SqlMapper.ITypeHandler handler)
         {
             if (Handlers.ContainsKey(type))
