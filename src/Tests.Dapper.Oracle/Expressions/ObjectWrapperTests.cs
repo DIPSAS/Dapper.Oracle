@@ -6,9 +6,10 @@ using Dapper.Oracle.Expressions;
 using FluentAssertions;
 using Xunit;
 
-using Managed = Oracle.ManagedDataAccess.Client;
 #if NETFRAMEWORK
 using UnManaged = Oracle.DataAccess.Client;
+#else
+using Managed = Oracle.ManagedDataAccess.Client;
 #endif
 
 namespace Tests.Dapper.Oracle.Expressions
@@ -19,11 +20,13 @@ namespace Tests.Dapper.Oracle.Expressions
         {
             get
             {
-#if NETCOREAPP2_0
-                yield return new object[] {new Managed.OracleCommand()};
-#else
+#if NETFRAMEWORK
+                
                 yield return new object[] { new Managed.OracleCommand() };
                 yield return new object[] { new UnManaged.OracleCommand() };
+#else
+                yield return new object[] {new Managed.OracleCommand()};
+
 #endif
             }
         }

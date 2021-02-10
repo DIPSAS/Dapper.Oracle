@@ -30,6 +30,7 @@
         <Title>Dapper support for Oracle providers</Title>
         <Authors>DIPSAS;epaulsen</Authors>
         <PackageIconUrl>https://raw.githubusercontent.com/DIPSAS/Dapper.Oracle/master/doc/images/DIPS.png</PackageIconUrl>
+        <PackageIcon>dips.png</PackageIcon>
         <Copyright>Copyright 2019 DIPS AS</Copyright>
         <PackageTags>Dapper;ORM;MicroORM;Oracle</PackageTags>  
         <Description>Dapper is a great tool if you want to write database-agnostic code. 
@@ -50,6 +51,7 @@ Using this package, you can now run stored procedures that returns RefCursor, or
     </PropertyGroup>
     <ItemGroup>
         <None Include="$(MSBuildThisFileDirectory)..\LICENSE" Pack="true" PackagePath=""/>
+        <None Include="$(MSBuildThisFileDirectory)..\doc\images\dips.png" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
     <!-- Import targets file with version information -->
@@ -96,12 +98,19 @@ Using this package, you can now run stored procedures that returns RefCursor, or
     <!-- add pdb to nuget package -->
     <PropertyGroup>
         <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludePDBsInPackage</TargetsForTfmSpecificContentInPackage>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols Condition=" $(IsNetCore) ">true</IncludeSymbols>
+        <SymbolPackageFormat Condition=" $(IsNetCore) ">snupkg</SymbolPackageFormat>
     </PropertyGroup>
     <Target Name="IncludePDBsInPackage" Condition="'$(IncludeBuildOutput)' != 'false'">
         <ItemGroup>
             <TfmSpecificPackageFile Include="$(OutputPath)\$(AssemblyName).pdb" PackagePath="lib/$(TargetFramework)" />
         </ItemGroup>
     </Target>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    </ItemGroup>
 
 
 
