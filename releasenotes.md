@@ -1,5 +1,17 @@
 # Releasenotes
 
+## 2.0.2 
+- Bugfix of typeconversion for arrays
+
+## 2.0.1
+- Minor bugfix of issue #46 , which was a regression of how `OracleValueConverter` behaves. Many thanks to @opejanovic for fixing this.
+
+## 2.0.0
+- Dependency switched to Dapper 2.0.35
+- Value conversion improvements (Thanks to @Havagan in PR #44 )
+- Parameters collection is now available before execution (Thanks to @opejanovic in PR #37)
+- Minimum full framework version bumped to .net 4.6.2, given that .net 4.5 is EOL.
+
 ## 1.2.1
 - Fixed bug in type converter
 - Added doc for Type handlers
