@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq.Expressions;
 using System.Reflection;
 using Dapper.Oracle.Expressions;
+using Dapper.Oracle.Util;
 
 namespace Dapper.Oracle
 {
@@ -17,17 +18,20 @@ namespace Dapper.Oracle
 
         public static void SetArrayBindCount(IDbCommand command, int arrayBindCount)
         {
-            Get(command).ArrayBindCount.SetValue(command, arrayBindCount);
+            IDbCommand actual = command.IsWrapped() ? command.DownCastCommand() : command;
+            Get(actual).ArrayBindCount.SetValue(actual, arrayBindCount);
         }
 
         public static void SetInitialLOBFetchSize(IDbCommand command, int arrayBindCount)
         {
-            Get(command).InitialLOBFetchSize.SetValue(command, arrayBindCount);
+            IDbCommand actual = command.IsWrapped() ? command.DownCastCommand() : command;
+            Get(actual).InitialLOBFetchSize.SetValue(actual, arrayBindCount);
         }
 
         public static void SetBindByName(IDbCommand command, bool bindByName)
         {
-            Get(command).BindByName.SetValue(command, bindByName);
+            IDbCommand actual = command.IsWrapped() ? command.DownCastCommand() : command;
+            Get(actual).BindByName.SetValue(actual, bindByName);
         }
 
         public static void SetOracleParameters(IDbDataParameter parameter, OracleDynamicParameters.OracleParameterInfo oracleParameterInfo)
@@ -148,6 +152,11 @@ namespace Dapper.Oracle
 
             public CommandExpressions(Type commandType)
             {
+                if (!commandType.Namespace.StartsWith("Oracle"))
+                {
+                    throw new NotSupportedException($"Whoopsies! This library will only work with Oracle types, you are attempting to use type {commandType.FullName}, which is not supported.");
+                }
+
                 BindByName = new ObjectWrapper<IDbCommand, bool>("BindByName", commandType);
                 InitialLOBFetchSize = new ObjectWrapper<IDbCommand, int>("InitialLOBFetchSize", commandType);
                 ArrayBindCount = new ObjectWrapper<IDbCommand, int>("ArrayBindCount", commandType);

@@ -1,5 +1,9 @@
 # Releasenotes
 
+## 2.0.3
+- Enabling using Dapper.Oracle when running under a profiled DbCommand.
+Basically, any database profiler will decorate an oracle connection, so Dapper.Oracle now looks for a public property of type DbCommand when it detects that it is not working against a OracleCommand, and will recursively search for the actual DbCommand in order to set the Oracle-specific properties.
+
 ## 2.0.2 
 - Bugfix of typeconversion for arrays
 
