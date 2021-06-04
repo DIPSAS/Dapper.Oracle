@@ -25,9 +25,7 @@ namespace Dapper.Oracle
         /// <summary>
         /// construct a dynamic parameter bag
         /// </summary>
-        public OracleDynamicParameters()
-        {
-        }
+        public OracleDynamicParameters() { }
 
         /// <summary>
         /// construct a dynamic parameter bag

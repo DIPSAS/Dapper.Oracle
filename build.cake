@@ -128,7 +128,8 @@ Task("pack")
          Configuration = configuration,
          OutputDirectory = "./artifacts/",
          NoBuild = true,
-         NoRestore = true
+         NoRestore = true,
+         IncludeSymbols = true
      };
 
      DotNetCorePack(solutionFile, settings);
