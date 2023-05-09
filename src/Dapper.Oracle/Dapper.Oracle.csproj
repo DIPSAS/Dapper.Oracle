@@ -3,22 +3,14 @@
     <Import Project="..\common.targets" />
     <PropertyGroup>
         <IsTestProject>false</IsTestProject>
-        <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+        <TargetFrameworks>net7.0</TargetFrameworks>
     </PropertyGroup>
 
-    <ItemGroup Condition=" $(IsNetFramework) ">
-        <Reference Include="Microsoft.CSharp" />
-        <Reference Include="System" />
-        <Reference Include="System.Configuration" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Runtime.Serialization" />
+    <ItemGroup>
+        <PackageReference Include="Dapper" Version="2.0.123" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dapper" Version="2.0.35" />
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     </ItemGroup>
-    <PropertyGroup Condition=" $(IsNetFramework) ">
-        <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    </PropertyGroup>
 </Project>

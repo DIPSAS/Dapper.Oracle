@@ -43,7 +43,7 @@ namespace Tests.Dapper.Oracle
         {
             testObject.Add("Foo", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.ReturnValue);
             testObject.AddParam(cmd);
-            cmd.Parameters.Should().HaveCount(1);
+            cmd.Parameters.Count.Should().Be(1);
             var param = retreiver.GetParameter(cmd.Parameters[0]);
             param.OracleDbType.Should().Be("RefCursor");
             param.ParameterName.Should().Be("Foo");
@@ -55,7 +55,7 @@ namespace Tests.Dapper.Oracle
             testObject.Add("Foo", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.ReturnValue);
 
             testObject.AddParam(cmd);
-            cmd.Parameters.Should().HaveCount(1);
+            cmd.Parameters.Count.Should().Be(1);
             var param = retreiver.GetParameter(cmd.Parameters[0]);
             param.ParameterName.Should().Be("Foo");
             param.OracleDbType.Should().Be("RefCursor");
@@ -67,7 +67,7 @@ namespace Tests.Dapper.Oracle
             testObject.Add("Foo", collectionType: OracleMappingCollectionType.PLSQLAssociativeArray);
 
             testObject.AddParam(cmd);
-            cmd.Parameters.Should().HaveCount(1);
+            cmd.Parameters.Count.Should().Be(1);
             var param = retreiver.GetParameter(cmd.Parameters[0]);
             param.CollectionType.Should().Be("PLSQLAssociativeArray");
         }
@@ -78,7 +78,7 @@ namespace Tests.Dapper.Oracle
             testObject.Add("Foo", "Bar", OracleMappingType.Varchar2, ParameterDirection.Input, 42, true, 0, 0, "MySource", DataRowVersion.Original);
 
             testObject.AddParam(cmd);
-            cmd.Parameters.Should().HaveCount(1);
+            cmd.Parameters.Count.Should().Be(1);
             var param = retreiver.GetParameter(cmd.Parameters[0]);
             param.ParameterName.Should().Be("Foo");
             param.Value.Should().Be("Bar");
@@ -131,7 +131,7 @@ namespace Tests.Dapper.Oracle
 
             testObject.AddParam(cmd);
 
-            cmd.Parameters.Should().HaveCount(1);                    
+            cmd.Parameters.Count.Should().Be(1);                    
             var param = retreiver.GetParameter(cmd.Parameters[0]);
             param.ParameterName.Should().Be("Foo");
             param.Value.Should().Be("Bar");
@@ -146,7 +146,7 @@ namespace Tests.Dapper.Oracle
 
             testObject.AddParam(cmd);
 
-            cmd.Parameters.Should().HaveCount(1);
+            cmd.Parameters.Count.Should().Be(1);
             var param = testObject.GetParameter("Foo");
             param.Name.Should().Be("Foo");
             param.Value.Should().Be("Bar");
