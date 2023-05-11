@@ -38,14 +38,14 @@ namespace Tests.Dapper.Oracle.IntegrationTests.BulkSql
                 new TableColumn {Name = "ADDRESS", DataType = OracleMappingType.Varchar2, Size = 60},
                 new TableColumn {Name = "POSTALCODE", DataType = OracleMappingType.Varchar2, Size = 40, Nullable=true},
                 new TableColumn {Name = "COUNTRY", DataType = OracleMappingType.Varchar2, Size = 40},
-                new TableColumn {Name = "PHONE", DataType = OracleMappingType.Varchar2, Size = 40},
+                new TableColumn {Name = "PHONE", DataType = OracleMappingType.Varchar2, Size = 40, Nullable=true},
                 new TableColumn {Name = "FAX", DataType = OracleMappingType.Varchar2, Size = 40, Nullable=true},
-                new NumberColumn {Name = "TIDSSTEMPEL", DataType = OracleMappingType.Int64},
-                new TableColumn {Name = "OPPRETTETAV", DataType = OracleMappingType.Varchar2, Size = 40},
-                new TableColumn {Name = "OPPRETTETTID", DataType = OracleMappingType.Date},
-                new TableColumn {Name = "SISTENDRETAV", DataType = OracleMappingType.Varchar2, Size=40},
-                new TableColumn {Name = "SISTENDRETTID", DataType = OracleMappingType.Date},
-                new NumberColumn {Name = "DIPSID", DataType = OracleMappingType.Int64},
+                new NumberColumn {Name = "TIDSSTEMPEL", DataType = OracleMappingType.Int64, Nullable=true},
+                new TableColumn {Name = "OPPRETTETAV", DataType = OracleMappingType.Varchar2, Size = 40, Nullable=true},
+                new TableColumn {Name = "OPPRETTETTID", DataType = OracleMappingType.Date, Nullable=true},
+                new TableColumn {Name = "SISTENDRETAV", DataType = OracleMappingType.Varchar2, Size=40, Nullable=true},
+                new TableColumn {Name = "SISTENDRETTID", DataType = OracleMappingType.Date, Nullable=true},
+                new NumberColumn {Name = "DIPSID", DataType = OracleMappingType.Int64, Nullable=true},
             };
 
             TableCreator.Create(Fixture.Connection, "BULKCUSTOMERS", columns);
@@ -143,15 +143,21 @@ namespace Tests.Dapper.Oracle.IntegrationTests.BulkSql
 
         public void InsertCustomers(IEnumerable<Customer> customers)
         {
-            string insertSql = "INSERT INTO CUSTOMERS(CUSTOMERID,NAME,ADDRESS,POSTALCODE,CITY) VALUES(:CUSTOMERID,:NAME,:POSTALCODE,:CITY)";
+            string insertSql = @"INSERT INTO BULKCUSTOMERS(CUSTOMERID,COMPANYNAME,ADDRESS,POSTALCODE,CITY, CONTACTNAME, CONTACTTITLE, Country, tidsstempel, opprettettid) 
+                VALUES(:CUSTOMERID,:COMPANYNAME,:ADDRESS, :POSTALCODE,:CITY, :ContactName, :CONTACTTITLE, :Country, :tidsstempel, :opprettettid)";
 
             var mapping = new BulkMapping<Customer>[]
             {
                 new BulkMapping<Customer>("CUSTOMERID",c=>c.CustomerId),
-                new BulkMapping<Customer>("NAME",c=>c.ContactName),
+                new BulkMapping<Customer>("COMPANYNAME",c=>c.ContactName),
                 new BulkMapping<Customer>("ADDRESS",c=>c.Address),
                 new BulkMapping<Customer>("POSTALCODE",c=>c.PostalCode),
                 new BulkMapping<Customer>("CITY",c=>c.City),
+                new BulkMapping<Customer>("ContactName",c=>c.ContactName),
+                new BulkMapping<Customer>("ContactTitle",c=>c.ContactTitle),
+                new BulkMapping<Customer>("Country", c=> c.Country),
+                new BulkMapping<Customer>("Tidsstempel", c=> c.TidsStempel),
+                new BulkMapping<Customer>("Opprettettid", c=> c.OpprettetTid)
             };
 
 
