@@ -37,6 +37,8 @@ namespace Tests.Dapper.Oracle.IntegrationTests
         {
             var connectionString = Environment.GetEnvironmentVariable("DA_OR_CONNECTION");
 
+            connectionString = "Data Source=localhost/dips;User Id=system;Password=oracle";
+
             if (string.IsNullOrEmpty(connectionString))
             {
                 var si = new ProcessStartInfo("powershell", @".\LocalOracleDockerDb.ps1");

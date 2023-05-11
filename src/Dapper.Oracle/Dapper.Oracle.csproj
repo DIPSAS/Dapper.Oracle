@@ -6,7 +6,17 @@
         <TargetFrameworks>net7.0</TargetFrameworks>
     </PropertyGroup>
 
-    <ItemGroup>
+	<PropertyGroup>
+		<PackageReleaseNotes>
+Version 2.0.4:
+ - Updated to use .net 7.0.
+ - Dependency switched to most recent version of Dapper: 2.0.123.
+ - Dependencies updated also for test project.
+		</PackageReleaseNotes>
+		<!--<PackageReadmeFile>..\..\README.MD</PackageReadmeFile>-->
+	</PropertyGroup>
+
+	<ItemGroup>
         <PackageReference Include="Dapper" Version="2.0.123" />
     </ItemGroup>
 

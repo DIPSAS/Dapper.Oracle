@@ -1,24 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\common.targets" />
-  <PropertyGroup>
-    <IsTestProject>false</IsTestProject>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-  </PropertyGroup>
+	<Import Project="..\common.targets" />
+	<PropertyGroup>
+		<IsTestProject>false</IsTestProject>
+		<TargetFrameworks>net7.0</TargetFrameworks>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>		
+	</PropertyGroup>
 
-  <ItemGroup Condition=" $(IsNetFramework) ">
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Runtime.Serialization" />
-  </ItemGroup>
+	<PropertyGroup>
+		<PackageReleaseNotes>
+			Version 2.0.4:
+			- Updated to use .net 7.0.
+			- Dependency switched to most recent version of Dapper: 2.0.123.
+			- Dependencies updated also for test project.
+		</PackageReleaseNotes>
 
-  <ItemGroup>
-        <PackageReference Include="Dapper" Version="2.0.35" />
-  </ItemGroup>
-  <PropertyGroup Condition=" $(IsNetFramework) ">
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-  </PropertyGroup>
+		<!--<PackageReadmeFile>..\..\README.MD</PackageReadmeFile>-->
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Dapper" Version="2.0.35" />
+	</ItemGroup>
 </Project>

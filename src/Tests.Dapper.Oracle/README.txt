@@ -2,7 +2,11 @@
 Unit tests can be run without any Oracle database available or an installed oracle client.
 
 To run integrations tests, you have to provide either a connection string to an existing oracle database, with credentials that enable you to create and drop tables.
-Set environment variable DA_OR_CONNECTION to a valid connectionstring to run unit tests this way.
+Set environment variable DA_OR_CONNECTION to a valid connectionstring to run integration tests, or pass the connectionstring as an argument to build.ps1.
+
+From Powershell:
+
+[System.Environment]::SetEnvironmentVariable("DA_OR_CONNECTION","Data Source=localhost/db;User Id=myuser;Password=mypassword;",[System.EnvironmentVariableTarget]::Machine)
 
 Alternatively, the unit test suite can download a Oracle docker container to your system, and execute the tests against that container.
 To do so, you will need to 

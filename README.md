@@ -60,8 +60,14 @@ public void RunStoredProcedureWithArrayAsParameters(IEnumerable<long> idvalues)
 ## Building
 From a powershell script, run `build.ps1` from the root folder of the repo.
 
+* Update changelog.md.
+* Modify packagereleasenotes in the csproj files.
+* Modify build.ps1 to set the correct version number.
+* To make the integration tests pass, you must setup a test database first, as described in the `\src\Tests.Dapper.Oracle\readme.txt` file.
+* The connectionstring to use can be sent to the buildscript as an argument
+
 Example:
 
 ```powershell
-build.ps1 -Task Compile
+build.ps1 -connectionstring "[a valid connectionstring to an oracle database]"
 ```
