@@ -1,29 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\common.targets"/>
+    <Import Project="..\common.targets" />
     <PropertyGroup>
         <IsTestProject>false</IsTestProject>
-        <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+        <TargetFrameworks>net7.0</TargetFrameworks>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
-    <ItemGroup Condition=" $(IsNetFramework) ">
-        <Reference Include="Microsoft.CSharp"/>
-        <Reference Include="System"/>
-        <Reference Include="System.Configuration"/>
-        <Reference Include="System.Core"/>
-        <Reference Include="System.Runtime.Serialization"/>
+    <ItemGroup>
+        <Compile Include="..\Dapper.Oracle\**\*.cs" Exclude="..\Dapper.Oracle\obj\**\*.cs;..\Dapper.Oracle\Properties\AssemblyInfo.cs" />
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Include="..\Dapper.Oracle\**\*.cs" Exclude="..\Dapper.Oracle\obj\**\*.cs;..\Dapper.Oracle\Properties\AssemblyInfo.cs"/>
+        <PackageReference Include="Dapper.StrongName" Version="2.0.123" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dapper.StrongName" Version="1.50.2"/>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     </ItemGroup>
-    <PropertyGroup Condition=" $(IsNetFramework) ">
-        <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    </PropertyGroup>
 </Project>
