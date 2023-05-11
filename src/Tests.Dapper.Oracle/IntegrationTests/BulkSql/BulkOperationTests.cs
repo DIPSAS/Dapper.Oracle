@@ -82,6 +82,22 @@ namespace Tests.Dapper.Oracle.IntegrationTests.BulkSql
             asyncQueryResult.Parameters.Should().NotBeNull();
         }
 
+
+        [Fact, Trait("Category", "IntegrationTest")]
+        public void BulkInsert_Test()
+        {
+            var customers = GetCustomersFromEmbeddedResource();
+            foreach (var customer in customers)
+            {
+                customer.CustomerId = Guid.NewGuid();
+            }
+
+            var customerCount = customers.Count;
+
+            var dal = new CustomerDAL(connection: Fixture.Connection);
+            dal.InsertCustomers(customers);
+        }
+
         IEnumerable<BulkMapping<Customer>> CreateMapping()
         {
             yield return new BulkMapping<Customer>("CUSTOMERID", c => c.CustomerId.ToByteArray(), OracleMappingType.Raw);

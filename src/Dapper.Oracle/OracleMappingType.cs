@@ -34,6 +34,7 @@
         XmlType = 127, // 0x0000007F
         BinaryDouble = 132, // 0x00000084
         BinaryFloat = 133, // 0x00000085
+        Boolean = 134
     }
 
     /// <summary>
