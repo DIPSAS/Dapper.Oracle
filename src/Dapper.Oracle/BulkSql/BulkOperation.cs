@@ -55,10 +55,10 @@ namespace Dapper.Oracle.BulkSql
             return connection.Execute(sql, parameters, commandType: cmdType);
         }
 
-        public static async Task<AsyncQueryResult> SqlBulkAsync<T>(this IDbConnection connection, string sql, IEnumerable<T> objects, IEnumerable<BulkMapping<T>> mapping, CommandType? cmdType = CommandType.Text, IDbTransaction transaction=null)
+        public static async Task<AsyncQueryResult> SqlBulkAsync<T>(this IDbConnection connection, string sql, IEnumerable<T> objects, IEnumerable<BulkMapping<T>> mapping, CommandType? cmdType = CommandType.Text, IDbTransaction transaction = null)
         {
             var parameters = CreateParameterFromObject(objects, mapping);
-            var result = await connection.ExecuteAsync(sql, parameters,transaction, commandType:cmdType);
+            var result = await connection.ExecuteAsync(sql, parameters, transaction, commandType: cmdType);
             return new AsyncQueryResult
             {
                 ExecuteResult = result,
@@ -76,7 +76,8 @@ namespace Dapper.Oracle.BulkSql
             foreach (var map in mapping)
             {
                 var values = map.Property != null ? obj.Select(map.Property).ToArray() : null;
-                var dbType = map.DbType ?? OracleMapper.GuessType(obj.First().GetType());
+
+                var dbType = map.DbType ?? (values != null ? OracleMapper.GuessType(values.First().GetType()) : null);
 
                 parameters.Add(
                     Clean(map.Name),
