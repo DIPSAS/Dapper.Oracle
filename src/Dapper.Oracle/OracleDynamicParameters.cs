@@ -1,6 +1,7 @@
 ﻿//// Based on Gist found here: https://gist.github.com/vijaysg/3096151
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace Dapper.Oracle
     /// Parameter support for Oracle-specific types and functions.  For use with Dapper.
     /// Implements <see cref="SqlMapper.IDynamicParameters"/>.
     /// </summary>
-    public partial class OracleDynamicParameters : SqlMapper.IDynamicParameters
+    public partial class OracleDynamicParameters : SqlMapper.IDynamicParameters, IEnumerable
     {
         private static Dictionary<SqlMapper.Identity, Action<IDbCommand, object>> ParamReaderCache { get; } =
             new Dictionary<SqlMapper.Identity, Action<IDbCommand, object>>();
@@ -319,6 +320,12 @@ namespace Dapper.Oracle
             public OracleParameterMappingStatus Status { get; set; }
 
             public IDbDataParameter AttachedParam { get; set; }
-        }        
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the parameters
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator GetEnumerator() => Parameters.GetEnumerator();
     }
 }

@@ -173,5 +173,17 @@ namespace Tests.Dapper.Oracle
             param.Value.Should().Be("Bar");
             param.DbType.Should().Be(OracleMappingType.Varchar2);
         }
+
+        [Fact]
+        public void CollectionInitializer()
+        {
+            var parameters = new OracleDynamicParameters
+            {
+                { "param1", 42, OracleMappingType.Int32, ParameterDirection.Input },
+                { "param2", "test", OracleMappingType.Varchar2, ParameterDirection.Input }
+            };
+
+            parameters.ParameterNames.Should().Equal("param1", "param2");
+        }
     }
 }
