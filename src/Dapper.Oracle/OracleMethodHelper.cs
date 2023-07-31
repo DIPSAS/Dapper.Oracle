@@ -121,7 +121,7 @@ namespace Dapper.Oracle
         {
             public OracleParameterExpressions(Type oracleParameterType)
             {
-                if (!oracleParameterType.Namespace.StartsWith("Oracle"))
+                if (!oracleParameterType.Namespace.StartsWith("Oracle") && !oracleParameterType.Namespace.StartsWith("Castle"))
                 {
                     throw new NotSupportedException($"Whoopsies! This library will only work with Oracle types, you are attempting to use type {oracleParameterType.FullName}.");
                 }
@@ -152,7 +152,7 @@ namespace Dapper.Oracle
 
             public CommandExpressions(Type commandType)
             {
-                if (!commandType.Namespace.StartsWith("Oracle"))
+                if (!commandType.Namespace.StartsWith("Oracle") && !commandType.Namespace.StartsWith("Castle"))
                 {
                     throw new NotSupportedException($"Whoopsies! This library will only work with Oracle types, you are attempting to use type {commandType.FullName}, which is not supported.");
                 }
